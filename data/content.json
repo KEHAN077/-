@@ -1,13 +1,13 @@
 {
   "site": {
-    "title": "KEHAN— 作品集",
-    "description": "林然的个人作品集",
-    "name": "kehan",
-    "eyebrow": "PORTFOLIO / 2026",
-    "heroTitle": "让未来，<em>留下真的想法。</em>",
-    "intro": "你好，我是kehan。一名专注于品牌、数字体验与视觉叙事的独立设计师。",
-    "aboutTitle": "硬件大设计，<br>而是让人感到，<em>这正是它本来的样子。</em>",
-    "aboutCopy": "我与有好奇心的品牌和创作者合作，把模糊的愿景变成清晰、有温度的体验。工作内容包括品牌策略、视觉识别、网站与数字产品设计。",
+    "title": "KEHAN — 硬件工程师作品集",
+    "description": "硬件工程师 KEHAN 的个人项目作品集",
+    "name": "KEHAN",
+    "eyebrow": "HARDWARE ENGINEER / 2026",
+    "heroTitle": "把想法，<em>做成真实硬件。</em>",
+    "intro": "你好，我是 KEHAN，一名专注于硬件产品与原型验证的硬件工程师。",
+    "aboutTitle": "从想法到可运行原型，<br><em>每一步都清晰可验证。</em>",
+    "aboutCopy": "我关注需求、实现和验证之间的完整闭环，用快速迭代把复杂问题变成可靠、清晰的硬件方案。",
     "email": "hello@example.com",
     "socials": [
       {
