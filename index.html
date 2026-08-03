@@ -3,43 +3,85 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="林然的个人作品集" />
-    <title>LIN RAN — 作品集</title>
+    <meta name="description" content="KEHAN 的硬件工程师个人作品集" />
+    <meta name="theme-color" content="#101210" />
+    <title>KEHAN — 硬件工程师作品集</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Noto+Sans+SC:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="content.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=20260803-3" />
+    <link rel="stylesheet" href="content.css?v=20260803-3" />
   </head>
   <body>
-    <div class="grain"></div>
     <header class="nav wrap">
-      <a class="brand" href="#top" aria-label="回到首页">LR<span>®</span></a>
-      <nav aria-label="主导航"><a href="#work">作品</a><a href="#about">关于</a><a href="#contact">联系</a></nav>
-      <a class="nav-mail" data-email-link href="mailto:hello@example.com"><span data-email>HELLO@EXAMPLE.COM</span> <b>↗</b></a>
+      <a class="brand" href="#top" aria-label="回到首页"><span>KH</span><b>//HW</b></a>
+      <nav aria-label="主导航"><a href="#work">项目</a><a href="#about">方法</a><a href="#contact">联系</a></nav>
+      <div class="nav-status"><i></i><span>HARDWARE ENGINEER</span></div>
     </header>
+
     <main id="top">
       <section class="hero wrap">
-        <p class="eyebrow" data-eyebrow>PORTFOLIO / 2026</p>
-        <h1 data-hero-title>让想法，<em>留下形状。</em></h1>
-        <div class="hero-bottom"><p data-intro>你好，我是林然。一名专注于品牌、数字体验与视觉叙事的独立设计师。</p><a class="round-link" href="#work" aria-label="浏览作品">↓</a></div>
+        <div class="hero-copy">
+          <p class="eyebrow" data-eyebrow>HARDWARE ENGINEER / 2026</p>
+          <h1 data-hero-title>把想法，<em>做成真实硬件。</em></h1>
+          <div class="hero-intro">
+            <p data-intro>你好，我是 KEHAN，一名专注于硬件产品与原型验证的硬件工程师。</p>
+            <a class="primary-link" href="#work">查看项目 <span>↓</span></a>
+          </div>
+        </div>
+
+        <aside class="engineer-card" aria-label="工程师信息概览">
+          <div class="board-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="card-top"><span>PROFILE_01</span><span class="online"><i></i> ONLINE</span></div>
+          <div class="chip-mark"><span>KH</span><small>REV.26</small></div>
+          <dl>
+            <div><dt>ROLE</dt><dd>HARDWARE ENGINEER</dd></div>
+            <div><dt>WORKFLOW</dt><dd>BUILD / TEST / ITERATE</dd></div>
+            <div><dt>OUTPUT</dt><dd>WORKING PROTOTYPES</dd></div>
+          </dl>
+        </aside>
       </section>
+
+      <section class="capability-strip" aria-label="工作方向">
+        <div class="wrap capability-grid">
+          <div><span>01</span><strong>电路与硬件</strong><small>CIRCUIT</small></div>
+          <div><span>02</span><strong>快速原型</strong><small>PROTOTYPE</small></div>
+          <div><span>03</span><strong>测试调试</strong><small>DEBUG</small></div>
+          <div><span>04</span><strong>持续迭代</strong><small>ITERATE</small></div>
+        </div>
+      </section>
+
       <section id="work" class="work wrap">
         <div class="section-heading">
-          <div><p class="eyebrow">SELECTED WORK</p><h2>精选作品<sup data-project-count>(00)</sup></h2></div>
-          <div class="filters" aria-label="作品筛选"><button class="active" data-filter="all">全部</button><button data-filter="brand">品牌</button><button data-filter="digital">数字产品</button><button data-filter="editorial">视觉</button></div>
+          <div><p class="eyebrow">ENGINEERING LOG</p><h2>项目记录<sup data-project-count>(00)</sup></h2></div>
+          <div class="filters" aria-label="项目筛选"><button class="active" data-filter="all">全部</button><button data-filter="brand">产品硬件</button><button data-filter="digital">嵌入式</button><button data-filter="editorial">研发记录</button></div>
         </div>
         <div class="projects" id="projects" aria-live="polite"></div>
         <p class="load-error" id="load-error" hidden>内容暂时未能加载，请稍后刷新页面。</p>
       </section>
+
       <section id="about" class="about">
-        <div class="wrap about-grid"><p class="eyebrow">ABOUT ME</p><div><h2 data-about-title>好的设计不是装饰，<br />而是让人感到，<em>这正是它本来的样子。</em></h2><p class="about-copy" data-about-copy>我与有好奇心的品牌和创作者合作，把模糊的愿景变成清晰、有温度的体验。</p><a class="text-link" href="#contact">联系我 <span>↗</span></a></div></div>
+        <div class="wrap about-grid">
+          <div class="about-lead"><p class="eyebrow">HOW I WORK</p><span class="about-code">SYS / 04</span></div>
+          <div>
+            <h2 data-about-title>从想法到可运行原型，<br /><em>每一步都清晰可验证。</em></h2>
+            <p class="about-copy" data-about-copy>我关注需求、实现和验证之间的完整闭环，用快速迭代把复杂问题变成可靠、清晰的硬件方案。</p>
+            <ol class="process-list">
+              <li><span>01</span><b>定义问题</b><small>DEFINE</small></li>
+              <li><span>02</span><b>搭建原型</b><small>BUILD</small></li>
+              <li><span>03</span><b>测试验证</b><small>TEST</small></li>
+              <li><span>04</span><b>迭代交付</b><small>ITERATE</small></li>
+            </ol>
+          </div>
+        </div>
       </section>
+
       <section id="contact" class="contact wrap">
-        <p class="eyebrow">GET IN TOUCH</p><h2>有个好想法？<br /><a data-email-link href="mailto:hello@example.com">一起聊聊。<span>↗</span></a></h2>
-        <div class="contact-bottom"><span>© <span data-year>2026</span> <span data-name>LIN RAN</span></span><div id="social-links"></div></div>
+        <div class="contact-label"><p class="eyebrow">START A PROJECT</p><span>AVAILABLE / 2026</span></div>
+        <h2>有个硬件想法？<br /><a data-email-link href="mailto:hello@example.com">一起把它做出来。<span>↗</span></a></h2>
+        <div class="contact-bottom"><span>© <span data-year>2026</span> <span data-name>KEHAN</span></span><a class="email-bottom" data-email-link href="mailto:hello@example.com"><span data-email>HELLO@EXAMPLE.COM</span></a><div id="social-links"></div></div>
       </section>
     </main>
-    <script src="script.js?v=20260803-2"></script>
+    <script src="script.js?v=20260803-3"></script>
   </body>
 </html>
