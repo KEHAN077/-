@@ -5,9 +5,14 @@ let projects = [];
 
 const REPOSITORY_RAW_ROOT = 'https://raw.githubusercontent.com/KEHAN077/-/main/';
 const CONTENT_URL = `${REPOSITORY_RAW_ROOT}data/content.json`;
+const CONTENT_API_URL = 'https://api.github.com/repos/KEHAN077/-/contents/data/content.json?ref=main';
 
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
 const safeUrl = (value = '') => { const url = String(value).trim(); return /^(https?:|mailto:|#|\.\/|\.\.\/|\/|media\/)/i.test(url) ? url : '#'; };
+const base64ToUtf8 = (base64) => {
+  const binary = atob(String(base64).replace(/\n/g, ''));
+  return new TextDecoder().decode(Uint8Array.from(binary, (char) => char.charCodeAt(0)));
+};
 const liveMediaUrl = (value = '') => {
   const url = String(value).trim();
   const repositoryPath = url.replace(/^\.\//, '');
@@ -60,6 +65,18 @@ function applySiteContent(data) {
 filterButtons.forEach((button) => button.addEventListener('click', () => { filterButtons.forEach((item) => item.classList.toggle('active', item === button)); renderProjects(button.dataset.filter); }));
 
 async function loadContent() {
+  try {
+    const apiResponse = await fetch(`${CONTENT_API_URL}&v=${Date.now()}`, {
+      cache: 'no-store',
+      headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+    });
+    if (apiResponse.ok) {
+      const file = await apiResponse.json();
+      if (file.content) return JSON.parse(base64ToUtf8(file.content));
+    }
+  } catch (error) {
+    // Continue with public raw and Pages fallbacks.
+  }
   const urls = [`${CONTENT_URL}?v=${Date.now()}`, `data/content.json?v=${Date.now()}`];
   for (const url of urls) {
     try {
