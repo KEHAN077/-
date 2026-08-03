@@ -9,92 +9,35 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Noto+Sans+SC:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="content.css" />
   </head>
   <body>
     <div class="grain"></div>
     <header class="nav wrap">
       <a class="brand" href="#top" aria-label="回到首页">LR<span>®</span></a>
-      <nav aria-label="主导航">
-        <a href="#work">作品</a>
-        <a href="#about">关于</a>
-        <a href="#contact">联系</a>
-      </nav>
-      <a class="nav-mail" href="mailto:hello@example.com">HELLO@EXAMPLE.COM <span>↗</span></a>
+      <nav aria-label="主导航"><a href="#work">作品</a><a href="#about">关于</a><a href="#contact">联系</a></nav>
+      <a class="nav-mail" data-email-link href="mailto:hello@example.com"><span data-email>HELLO@EXAMPLE.COM</span> <b>↗</b></a>
     </header>
-
     <main id="top">
       <section class="hero wrap">
-        <p class="eyebrow">PORTFOLIO / 2026</p>
-        <h1>让想法，<em>留下形状。</em></h1>
-        <div class="hero-bottom">
-          <p>你好，我是林然。一名专注于品牌、数字体验与视觉叙事的独立设计师。</p>
-          <a class="round-link" href="#work" aria-label="浏览作品">↓</a>
-        </div>
+        <p class="eyebrow" data-eyebrow>PORTFOLIO / 2026</p>
+        <h1 data-hero-title>让想法，<em>留下形状。</em></h1>
+        <div class="hero-bottom"><p data-intro>你好，我是林然。一名专注于品牌、数字体验与视觉叙事的独立设计师。</p><a class="round-link" href="#work" aria-label="浏览作品">↓</a></div>
       </section>
-
       <section id="work" class="work wrap">
         <div class="section-heading">
-          <div>
-            <p class="eyebrow">SELECTED WORK</p>
-            <h2>精选作品 <sup>(06)</sup></h2>
-          </div>
-          <div class="filters" aria-label="作品筛选">
-            <button class="active" data-filter="all">全部</button>
-            <button data-filter="brand">品牌</button>
-            <button data-filter="digital">数字产品</button>
-            <button data-filter="editorial">视觉</button>
-          </div>
+          <div><p class="eyebrow">SELECTED WORK</p><h2>精选作品<sup data-project-count>(00)</sup></h2></div>
+          <div class="filters" aria-label="作品筛选"><button class="active" data-filter="all">全部</button><button data-filter="brand">品牌</button><button data-filter="digital">数字产品</button><button data-filter="editorial">视觉</button></div>
         </div>
-
-        <div class="projects">
-          <a class="project project-large" data-category="brand" href="#contact">
-            <div class="project-image image-orange"><img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1400&q=85" alt="室内空间与植物" /></div>
-            <div class="project-meta"><span>01 / BRAND IDENTITY</span><span>2026</span></div>
-            <h3>丘山 · 自然生活品牌</h3>
-          </a>
-          <a class="project" data-category="digital" href="#contact">
-            <div class="project-image"><img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1000&q=85" alt="手机应用界面设计" /></div>
-            <div class="project-meta"><span>02 / DIGITAL</span><span>2026</span></div>
-            <h3>Onda · 健康应用</h3>
-          </a>
-          <a class="project" data-category="editorial" href="#contact">
-            <div class="project-image"><img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=1000&q=85" alt="杂志与桌面" /></div>
-            <div class="project-meta"><span>03 / EDITORIAL</span><span>2025</span></div>
-            <h3>未命名杂志 · 第四期</h3>
-          </a>
-          <a class="project" data-category="brand" href="#contact">
-            <div class="project-image"><img src="https://images.unsplash.com/photo-1523726491678-bf852e717f6a?auto=format&fit=crop&w=1000&q=85" alt="建筑表面与阳光" /></div>
-            <div class="project-meta"><span>04 / BRAND IDENTITY</span><span>2025</span></div>
-            <h3>CASA · 建筑工作室</h3>
-          </a>
-          <a class="project project-wide" data-category="digital" href="#contact">
-            <div class="project-image"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1400&q=85" alt="复古电子游戏机" /></div>
-            <div class="project-meta"><span>05 / DIGITAL EXPERIENCE</span><span>2025</span></div>
-            <h3>PLAY / 交互式档案</h3>
-          </a>
-          <a class="project" data-category="editorial" href="#contact">
-            <div class="project-image"><img src="https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1000&q=85" alt="演出灯光" /></div>
-            <div class="project-meta"><span>06 / ART DIRECTION</span><span>2024</span></div>
-            <h3>夜航 · 音乐视觉</h3>
-          </a>
-        </div>
+        <div class="projects" id="projects" aria-live="polite"></div>
+        <p class="load-error" id="load-error" hidden>内容暂时未能加载，请稍后刷新页面。</p>
       </section>
-
       <section id="about" class="about">
-        <div class="wrap about-grid">
-          <p class="eyebrow">ABOUT ME</p>
-          <div>
-            <h2>好的设计不是装饰，<br />而是让人感到：<em>这正是它本来的样子。</em></h2>
-            <p class="about-copy">我与有好奇心的品牌和创作者合作，把模糊的愿景变成清晰、有温度的体验。工作内容包括品牌策略、视觉识别、网站与数字产品设计。</p>
-            <a class="text-link" href="#contact">更多关于我 <span>→</span></a>
-          </div>
-        </div>
+        <div class="wrap about-grid"><p class="eyebrow">ABOUT ME</p><div><h2 data-about-title>好的设计不是装饰，<br />而是让人感到，<em>这正是它本来的样子。</em></h2><p class="about-copy" data-about-copy>我与有好奇心的品牌和创作者合作，把模糊的愿景变成清晰、有温度的体验。</p><a class="text-link" href="#contact">联系我 <span>↗</span></a></div></div>
       </section>
-
       <section id="contact" class="contact wrap">
-        <p class="eyebrow">GET IN TOUCH</p>
-        <h2>有个好想法？<br /><a href="mailto:hello@example.com">一起聊聊。<span>↗</span></a></h2>
-        <div class="contact-bottom"><span>© 2026 LIN RAN</span><div><a href="#">小红书</a><a href="#">Instagram</a><a href="#">Behance</a></div></div>
+        <p class="eyebrow">GET IN TOUCH</p><h2>有个好想法？<br /><a data-email-link href="mailto:hello@example.com">一起聊聊。<span>↗</span></a></h2>
+        <div class="contact-bottom"><span>© <span data-year>2026</span> <span data-name>LIN RAN</span></span><div id="social-links"></div></div>
       </section>
     </main>
     <script src="script.js"></script>

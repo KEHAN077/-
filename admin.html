@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>作品集管理后台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <header class="admin-header"><div><span class="logo">LR</span><span>作品集管理后台</span></div><div class="header-actions"><a href="./" target="_blank">查看网站 ↗</a><button id="logout" class="button ghost" hidden>退出</button></div></header>
+    <main>
+      <section id="login-view" class="login-card">
+        <p class="kicker">PRIVATE EDITOR</p><h1>连接你的 GitHub 仓库</h1><p class="muted">后台会直接更新网站内容。请使用仅授权此仓库、拥有 Contents 读写权限的 Fine-grained token。</p>
+        <form id="login-form"><div class="field-row"><label>GitHub 用户名<input name="owner" value="kehan077" required /></label><label>仓库名<input name="repo" value="-" required /></label></div><label>分支<input name="branch" value="main" required /></label><label>Fine-grained token<input name="token" type="password" autocomplete="off" placeholder="github_pat_…" required /></label><button class="button primary full" type="submit">连接并进入后台</button><p class="form-note">Token 只保存在当前标签页，关闭后自动清除。</p></form>
+      </section>
+      <section id="editor-view" hidden>
+        <div class="editor-toolbar"><div><p class="kicker">CONTENT EDITOR</p><h1>编辑你的网站</h1></div><div class="toolbar-actions"><span id="status" role="status"></span><button id="save-all" class="button primary">保存并发布</button></div></div>
+        <details class="panel site-panel"><summary><span><b>网站基本信息</b><small>标题、介绍、联系方式</small></span><span>编辑 ↓</span></summary><div class="panel-body" id="site-form"><div class="field-row"><label>浏览器标题<input data-site="title" /></label><label>姓名 / 品牌名<input data-site="name" /></label></div><div class="field-row"><label>顶部小标题<input data-site="eyebrow" /></label><label>联系邮箱<input data-site="email" type="email" /></label></div><label>首页大标题 <small>可用 &lt;em&gt;…&lt;/em&gt; 添加衬线斜体</small><textarea data-site="heroTitle" rows="2"></textarea></label><label>首页介绍<textarea data-site="intro" rows="3"></textarea></label><label>关于标题 <small>可用 &lt;br&gt; 换行</small><textarea data-site="aboutTitle" rows="3"></textarea></label><label>关于正文<textarea data-site="aboutCopy" rows="4"></textarea></label><label>社交链接 <small>每行填写“名称 | 链接”</small><textarea id="socials" rows="4"></textarea></label></div></details>
+        <div class="projects-heading"><div><h2>作品</h2><p>使用箭头调整作品的展示顺序。</p></div><button id="add-project" class="button secondary">＋ 新增作品</button></div>
+        <div class="workspace"><aside id="project-list" class="project-list"></aside><section id="project-editor" class="panel project-editor"><div class="empty-editor"><span>←</span><p>选择一个作品开始编辑，或新增作品。</p></div></section></div>
+      </section>
+    </main>
+    <input id="media-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" hidden />
+    <script src="admin.js"></script>
+  </body>
+</html>
