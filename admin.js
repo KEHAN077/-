@@ -9,9 +9,35 @@ const base64ToUtf8 = (base64) => { const binary = atob(base64.replace(/\n/g, '')
 const apiPath = (path) => `https://api.github.com/repos/${encodeURIComponent(state.owner)}/${encodeURIComponent(state.repo)}/contents/${path}`;
 
 async function github(path, options = {}) {
-  const response = await fetch(path, { ...options, headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${state.token}`, 'X-GitHub-Api-Version': '2022-11-28', ...(options.headers || {}) } });
+  let response;
+  try {
+    response = await fetch(path, {
+      ...options,
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${state.token}`,
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        ...(options.headers || {})
+      }
+    });
+  } catch (error) {
+    throw new Error('无法连接 GitHub API，请检查网络后重试。');
+  }
   const body = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(body.message || `GitHub 请求失败 (${response.status})`);
+  if (!response.ok) {
+    const messages = {
+      401: 'Token 无效或已经失效，请重新生成。',
+      403: 'Token 没有写入权限。请确认 Contents 权限为 Read and write。',
+      404: '找不到仓库或内容文件。请检查仓库名、分支及 token 授权范围。',
+      409: '线上内容刚被其他操作修改，请刷新后台后重新编辑。',
+      422: 'GitHub 拒绝了此次写入。请检查文件大小、格式或 token 权限。'
+    };
+    const error = new Error(messages[response.status] || body.message || `GitHub 请求失败 (${response.status})`);
+    error.status = response.status;
+    throw error;
+  }
   return body;
 }
 
@@ -26,7 +52,7 @@ async function connect(form) {
   localStorage.setItem('portfolio-repo', JSON.stringify({ owner: state.owner, repo: state.repo, branch: state.branch }));
   sessionStorage.setItem('portfolio-token', state.token);
   loginView.hidden = true; editorView.hidden = false; $('#logout').hidden = false;
-  fillSiteForm(); renderList();
+  fillSiteForm(); renderList(); setStatus('仓库连接成功，可以开始编辑', 'success');
 }
 
 function fillSiteForm() {
@@ -86,18 +112,34 @@ async function uploadMedia(file) {
   if (!file || !selectedProject()) return;
   if (file.size > 45 * 1024 * 1024) throw new Error('文件超过 45 MB，请压缩后再上传。');
   const button = $('#upload-media'); button.disabled = true; button.textContent = '正在上传…'; setStatus('正在上传媒体，请勿关闭页面');
-  const cleanName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-'); const path = `media/${Date.now()}-${cleanName}`;
+  const extension = (file.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanStem = file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'upload';
+  const cleanName = `${cleanStem}.${extension || (file.type.startsWith('video/') ? 'mp4' : 'jpg')}`;
+  const path = `media/${Date.now()}-${cleanName}`;
   const content = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
-  await github(apiPath(path), { method: 'PUT', body: JSON.stringify({ message: `Upload ${cleanName}`, content, branch: state.branch }) });
-  const project = selectedProject(); project.media = path; project.mediaType = file.type.startsWith('video/') ? 'video' : 'image'; markDirty(); renderList(); renderProjectEditor(); setStatus('媒体已上传，记得保存并发布', 'success');
+  const uploaded = await github(apiPath(path), { method: 'PUT', body: JSON.stringify({ message: `Upload ${cleanName}`, content, branch: state.branch }) });
+  if (!uploaded.content?.path) throw new Error('GitHub 没有返回上传后的文件路径，请重试。');
+  const project = selectedProject(); project.media = uploaded.content.path; project.mediaType = file.type.startsWith('video/') ? 'video' : 'image'; markDirty(); renderList(); renderProjectEditor(); setStatus('媒体上传成功，请点击“保存并发布”完成作品更新', 'success');
 }
 
 async function saveAll() {
   const button = $('#save-all'); button.disabled = true; setStatus('正在发布…');
   try {
-    const result = await github(apiPath('data/content.json'), { method: 'PUT', body: JSON.stringify({ message: `Update portfolio content ${new Date().toISOString()}`, content: utf8ToBase64(`${JSON.stringify(state.content, null, 2)}\n`), sha: state.contentSha, branch: state.branch }) });
-    state.contentSha = result.content.sha; state.dirty = false; setStatus('发布成功，网站通常会在 1–3 分钟内更新', 'success');
-  } catch (error) { setStatus(error.message, 'error'); } finally { button.disabled = false; }
+    const path = apiPath('data/content.json');
+    const payload = () => ({ message: `Update portfolio content ${new Date().toISOString()}`, content: utf8ToBase64(`${JSON.stringify(state.content, null, 2)}\n`), sha: state.contentSha, branch: state.branch });
+    const latest = await github(`${path}?ref=${encodeURIComponent(state.branch)}&v=${Date.now()}`);
+    state.contentSha = latest.sha;
+    let result;
+    try {
+      result = await github(path, { method: 'PUT', body: JSON.stringify(payload()) });
+    } catch (error) {
+      if (error.status !== 409) throw error;
+      const refreshed = await github(`${path}?ref=${encodeURIComponent(state.branch)}&v=${Date.now()}`);
+      state.contentSha = refreshed.sha;
+      result = await github(path, { method: 'PUT', body: JSON.stringify(payload()) });
+    }
+    state.contentSha = result.content.sha; state.dirty = false; setStatus('发布成功，刷新前台通常几秒内即可看到', 'success');
+  } catch (error) { setStatus(error.message, 'error'); alert(`发布失败：${error.message}`); } finally { button.disabled = false; }
 }
 
 $('#login-form').addEventListener('submit', async (event) => {
@@ -108,7 +150,7 @@ $('#add-project').addEventListener('click', () => {
   const project = { id: `project-${Date.now()}`, title: '新作品', description: '', category: 'editorial', label: 'PROJECT', year: String(new Date().getFullYear()), mediaType: 'image', media: '', alt: '', link: '#contact', layout: 'normal', published: false };
   state.content.projects.unshift(project); state.selectedId = project.id; markDirty(); renderList(); renderProjectEditor();
 });
-$('#media-file').addEventListener('change', async (event) => { try { await uploadMedia(event.target.files[0]); } catch (error) { setStatus(error.message, 'error'); const button = $('#upload-media'); if (button) { button.disabled = false; button.textContent = '上传图片或视频'; } } event.target.value = ''; });
+$('#media-file').addEventListener('change', async (event) => { try { await uploadMedia(event.target.files[0]); } catch (error) { setStatus(error.message, 'error'); alert(`上传失败：${error.message}`); const button = $('#upload-media'); if (button) { button.disabled = false; button.textContent = '上传图片或视频'; } } event.target.value = ''; });
 $('#save-all').addEventListener('click', saveAll);
 $('#logout').addEventListener('click', () => { sessionStorage.removeItem('portfolio-token'); location.reload(); });
 window.addEventListener('beforeunload', (event) => { if (state.dirty) { event.preventDefault(); event.returnValue = ''; } });
