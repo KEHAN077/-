@@ -3,14 +3,22 @@ const errorElement = document.querySelector('#load-error');
 const filterButtons = [...document.querySelectorAll('.filters button')];
 let projects = [];
 
+const REPOSITORY_RAW_ROOT = 'https://raw.githubusercontent.com/KEHAN077/-/main/';
+const CONTENT_URL = `${REPOSITORY_RAW_ROOT}data/content.json`;
+
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
-const safeUrl = (value = '') => { const url = String(value).trim(); return /^(https?:|mailto:|\.\/|\.\.\/|\/|media\/)/i.test(url) ? url : '#'; };
+const safeUrl = (value = '') => { const url = String(value).trim(); return /^(https?:|mailto:|#|\.\/|\.\.\/|\/|media\/)/i.test(url) ? url : '#'; };
+const liveMediaUrl = (value = '') => {
+  const url = String(value).trim();
+  const repositoryPath = url.replace(/^\.\//, '');
+  return repositoryPath.startsWith('media/') ? `${REPOSITORY_RAW_ROOT}${repositoryPath}` : url;
+};
 
 function projectCard(project, index) {
   const layout = ['large', 'wide'].includes(project.layout) ? ` project-${project.layout}` : '';
   const media = project.mediaType === 'video'
-    ? `<video src="${escapeHtml(safeUrl(project.media))}" ${project.poster ? `poster="${escapeHtml(safeUrl(project.poster))}"` : ''} muted loop playsinline controls preload="metadata"></video>`
-    : `<img src="${escapeHtml(safeUrl(project.media))}" alt="${escapeHtml(project.alt || project.title)}" loading="lazy" />`;
+    ? `<video src="${escapeHtml(safeUrl(liveMediaUrl(project.media)))}" ${project.poster ? `poster="${escapeHtml(safeUrl(liveMediaUrl(project.poster)))}"` : ''} muted loop playsinline controls preload="metadata"></video>`
+    : `<img src="${escapeHtml(safeUrl(liveMediaUrl(project.media)))}" alt="${escapeHtml(project.alt || project.title)}" loading="lazy" />`;
   const number = String(index + 1).padStart(2, '0');
   return `<article class="project${layout}" data-category="${escapeHtml(project.category || 'editorial')}"><a href="${escapeHtml(safeUrl(project.link || '#contact'))}"><div class="project-image">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</a></article>`;
 }
@@ -50,4 +58,18 @@ function applySiteContent(data) {
 }
 
 filterButtons.forEach((button) => button.addEventListener('click', () => { filterButtons.forEach((item) => item.classList.toggle('active', item === button)); renderProjects(button.dataset.filter); }));
-fetch(`data/content.json?v=${Date.now()}`).then((response) => { if (!response.ok) throw new Error('Content unavailable'); return response.json(); }).then(applySiteContent).catch(() => { errorElement.hidden = false; });
+
+async function loadContent() {
+  const urls = [`${CONTENT_URL}?v=${Date.now()}`, `data/content.json?v=${Date.now()}`];
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, { cache: 'no-store' });
+      if (response.ok) return await response.json();
+    } catch (error) {
+      // Try the bundled Pages copy when GitHub's raw endpoint is unavailable.
+    }
+  }
+  throw new Error('Content unavailable');
+}
+
+loadContent().then(applySiteContent).catch(() => { errorElement.hidden = false; });
