@@ -14,6 +14,7 @@ const DEFAULT_SITE = {
   projectsEyebrow: 'ENGINEERING LOG', projectsTitle: '项目记录', filterAll: '全部', filterBrand: '产品硬件', filterDigital: '嵌入式', filterEditorial: '研发记录', projectLinkLabel: 'VIEW PROJECT ↗',
   aboutEyebrow: 'HOW I WORK', aboutCode: 'SYS / 04', contactEyebrow: 'START A PROJECT', contactStatus: 'AVAILABLE / 2026', contactTitle: '有个硬件想法？', contactCta: '一起把它做出来。',
   profileImage: '', profileImageAlt: 'KEHAN 的头像',
+  fontNav: '13', fontHero: '100', fontIntro: '16', fontSection: '66', fontProject: '22', fontAbout: '66', fontBody: '16', fontContact: '92', fontCard: '13',
   capabilities: [{ title: '电路与硬件', code: 'CIRCUIT' }, { title: '快速原型', code: 'PROTOTYPE' }, { title: '测试调试', code: 'DEBUG' }, { title: '持续迭代', code: 'ITERATE' }],
   processSteps: [{ title: '定义问题', code: 'DEFINE' }, { title: '搭建原型', code: 'BUILD' }, { title: '测试验证', code: 'TEST' }, { title: '迭代交付', code: 'ITERATE' }]
 };
