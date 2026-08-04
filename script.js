@@ -36,7 +36,11 @@ function projectCard(project, index) {
   const tag = link ? 'a' : 'div';
   const attributes = link ? ` href="${escapeHtml(link)}"${external ? ' target="_blank" rel="noreferrer"' : ''}` : '';
   const linkLabel = link ? (siteContent.projectLinkLabel || 'VIEW PROJECT ↗') : '';
-  return `<article class="project${layout}${link ? '' : ' project-no-link'}" data-category="${escapeHtml(project.category || 'editorial')}"><${tag} class="project-card"${attributes}><div class="project-image" data-link-label="${escapeHtml(linkLabel)}">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</${tag}></article>`;
+  const configuredHoverImages = Array.isArray(project.hoverImages) ? project.hoverImages.filter(Boolean).slice(0, 2) : [];
+  const hoverImages = configuredHoverImages.length ? configuredHoverImages : (project.mediaType === 'image' && project.media ? [project.media] : []);
+  const hoverGallery = hoverImages.length ? `<div class="project-hover-gallery" aria-hidden="true">${hoverImages.map((image, previewIndex) => `<img src="${escapeHtml(safeUrl(liveMediaUrl(image)))}" alt="" loading="lazy" data-preview="${previewIndex + 1}" />`).join('')}</div>` : '';
+  const previewSide = index % 2 === 0 ? ' project-preview-left' : ' project-preview-right';
+  return `<article class="project${layout}${previewSide}${link ? '' : ' project-no-link'}" data-category="${escapeHtml(project.category || 'editorial')}"><${tag} class="project-card"${attributes}>${hoverGallery}<div class="project-image" data-link-label="${escapeHtml(linkLabel)}">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</${tag}></article>`;
 }
 
 function renderProjects(filter = 'all') {
