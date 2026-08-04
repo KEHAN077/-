@@ -114,7 +114,11 @@
       "alt": "室内空间与植物",
       "link": "https://oshwhub.com/irex142359/project_xlbhvypw",
       "layout": "large",
-      "published": true
+      "published": true,
+      "hoverImages": [
+        "media/1785829221930-_20260709095504_292_142.jpg",
+        "media/1785829226754-_20260709095520_293_142.jpg"
+      ]
     },
     {
       "id": "onda",
@@ -187,5 +191,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T06:10:21.104Z"
+  "updatedAt": "2026-08-04T07:40:34.587Z"
 }
