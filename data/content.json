@@ -18,7 +18,7 @@
     "outputLabel": "OUTPUT",
     "output": "WORKING PROTOTYPES",
     "projectsEyebrow": "ENGINEERING LOG",
-    "projectsTitle": "项目记录<em>点击可查看详情</em>",
+    "projectsTitle": "项目记录-点击可查看详情",
     "filterAll": "全部",
     "filterBrand": "产品硬件",
     "filterDigital": "嵌入式",
@@ -201,5 +201,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T08:24:55.908Z"
+  "updatedAt": "2026-08-04T08:25:29.379Z"
 }
