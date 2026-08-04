@@ -1,7 +1,7 @@
 {
   "site": {
-    "brandPrimary": "KH",
-    "brandSecondary": "//HW",
+    "brandPrimary": "KEHAN",
+    "brandSecondary": "       LIU",
     "navWork": "项目",
     "navAbout": "方法",
     "navContact": "联系",
@@ -231,5 +231,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T08:43:59.131Z"
+  "updatedAt": "2026-08-04T08:48:13.779Z"
 }
