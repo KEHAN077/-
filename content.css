@@ -27,7 +27,25 @@
   .project-preview-left .project-hover-gallery img+img{--preview-rotation:2deg}
   .project-preview-right .project-hover-gallery img:first-child{--preview-rotation:2.5deg}
   .project-preview-right .project-hover-gallery img+img{--preview-rotation:-2deg}
+  .project-description{transition:margin .65s cubic-bezier(.18,.75,.2,1),max-width .65s cubic-bezier(.18,.75,.2,1)}
+  .project-preview-left:hover .project-description,.project-preview-left:focus-within .project-description{margin-left:var(--preview-text-offset,104px);max-width:calc(100% - var(--preview-text-offset,104px))}
+  .project-preview-right:hover .project-description,.project-preview-right:focus-within .project-description{margin-right:var(--preview-text-offset,104px);max-width:calc(100% - var(--preview-text-offset,104px))}
 }
+.nav,main{position:relative;z-index:1}
+.circuit-backdrop{position:fixed;z-index:0;left:12px;top:20vh;width:102px;height:430px;pointer-events:none;opacity:.25;color:#3157ff}
+.circuit-backdrop:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0 18px,currentColor 18px 20px,transparent 20px 55px,currentColor 55px 57px,transparent 57px),linear-gradient(0deg,transparent 0 28px,currentColor 28px 30px,transparent 30px 96px,currentColor 96px 98px,transparent 98px 172px,currentColor 172px 174px,transparent 174px 252px,currentColor 252px 254px,transparent 254px);mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 88%,transparent)}
+.circuit-backdrop i{position:absolute;width:10px;height:10px;border:2px solid currentColor;background:var(--paper);box-shadow:0 0 0 4px rgba(49,87,255,.06)}
+.circuit-backdrop i:after{content:"";position:absolute;left:8px;top:3px;width:34px;height:2px;background:currentColor}
+.circuit-backdrop i:nth-child(1){left:14px;top:42px}.circuit-backdrop i:nth-child(2){left:52px;top:108px}.circuit-backdrop i:nth-child(3){left:14px;top:184px}.circuit-backdrop i:nth-child(4){left:52px;top:264px}.circuit-backdrop i:nth-child(5){left:14px;top:338px}.circuit-backdrop i:nth-child(6){left:52px;top:398px}
+.scroll-pacman{position:fixed;z-index:30;right:20px;top:16vh;bottom:16vh;width:32px;pointer-events:none}
+.scroll-track{position:absolute;left:15px;top:0;bottom:0;width:2px;background:rgba(49,87,255,.16)}
+.scroll-dot{position:absolute;left:-3px;width:8px;height:8px;background:#3157ff;box-shadow:0 0 0 2px rgba(49,87,255,.08);transition:opacity .2s ease,transform .2s ease}
+.scroll-dot.eaten{opacity:.1;transform:scale(.35)}
+.pixel-pacman{position:absolute;left:2px;top:0;width:28px;height:28px;background:#ffd928;clip-path:polygon(0 0,100% 0,100% 32%,66% 50%,100% 68%,100% 100%,0 100%);box-shadow:0 0 0 2px #111310,4px 4px 0 rgba(49,87,255,.18);transition:transform .12s linear;image-rendering:pixelated}
+.pixel-pacman:after{content:"";position:absolute;left:16px;top:5px;width:4px;height:4px;background:#111310}
+.scroll-pacman.is-scrolling .pixel-pacman{animation:pixel-chomp .22s steps(2,end) infinite}
+@keyframes pixel-chomp{50%{clip-path:polygon(0 0,100% 0,100% 40%,78% 50%,100% 60%,100% 100%,0 100%)}}
+@media(max-width:1099px),(prefers-reduced-motion:reduce){.circuit-backdrop,.scroll-pacman{display:none}}
 .primary-link>span{font:inherit}
 .primary-link>b{font:20px "DM Mono",monospace;font-weight:400}
 .contact h2>span,.contact h2 a>span{font:inherit;vertical-align:baseline}
