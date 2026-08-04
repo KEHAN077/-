@@ -1,11 +1,30 @@
 .project{color:inherit;display:block}
-.project-card{color:inherit;text-decoration:none;display:block}
+.project-card{position:relative;color:inherit;text-decoration:none;display:block}
 .project-image video{display:block;width:100%;height:100%;object-fit:cover;background:var(--ink)}
 .project-description{max-width:620px;margin:10px 0 0;color:var(--muted);font-size:var(--font-body,13px);line-height:1.7}
 .empty-state,.load-error{grid-column:1/-1;margin:30px 0;color:var(--muted);font-size:14px}
 .contact-bottom #social-links{display:flex;gap:20px}
 .project-image:after{content:attr(data-link-label)}
 .project-no-link .project-image:after{display:none}
+.project-hover-gallery{display:none}
+@media(min-width:1100px) and (hover:hover) and (pointer:fine){
+  .projects{overflow:visible}
+  .project{position:relative;z-index:1}
+  .project:hover,.project:focus-within{z-index:8}
+  .project-hover-gallery{position:absolute;top:clamp(46px,7vw,105px);z-index:5;display:flex;width:clamp(112px,10vw,148px);flex-direction:column;gap:14px;pointer-events:none;opacity:0;transition:opacity .65s ease,transform .8s cubic-bezier(.18,.75,.2,1)}
+  .project-hover-gallery img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid rgba(17,19,16,.55);box-shadow:0 18px 42px rgba(25,30,60,.2);filter:saturate(.9);transition:transform .8s cubic-bezier(.18,.75,.2,1),filter .55s ease}
+  .project-hover-gallery img+img{margin-left:18px}
+  .project-preview-left .project-hover-gallery{left:0;transform:translate(12%,18px)}
+  .project-preview-right .project-hover-gallery{right:18px;transform:translate(-12%,18px)}
+  .project-card:hover .project-hover-gallery,.project-card:focus-visible .project-hover-gallery{opacity:1}
+  .project-preview-left .project-card:hover .project-hover-gallery,.project-preview-left .project-card:focus-visible .project-hover-gallery{transform:translate(calc(-100% - 18px),0)}
+  .project-preview-right .project-card:hover .project-hover-gallery,.project-preview-right .project-card:focus-visible .project-hover-gallery{transform:translate(calc(100% + 18px),0)}
+  .project-card:hover .project-hover-gallery img,.project-card:focus-visible .project-hover-gallery img{filter:saturate(1.05)}
+  .project-preview-left .project-hover-gallery img:first-child{transform:rotate(-2.5deg)}
+  .project-preview-left .project-hover-gallery img+img{transform:rotate(2deg)}
+  .project-preview-right .project-hover-gallery img:first-child{transform:rotate(2.5deg)}
+  .project-preview-right .project-hover-gallery img+img{transform:rotate(-2deg)}
+}
 .primary-link>span{font:inherit}
 .primary-link>b{font:20px "DM Mono",monospace;font-weight:400}
 .contact h2>span,.contact h2 a>span{font:inherit;vertical-align:baseline}
