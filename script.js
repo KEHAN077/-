@@ -101,16 +101,7 @@ function applySiteContent(data) {
 
 filterButtons.forEach((button) => button.addEventListener('click', () => { filterButtons.forEach((item) => item.classList.toggle('active', item === button)); renderProjects(button.dataset.filter); }));
 
-async function loadContent() {
-  const urls = [`${CONTENT_URL}?v=${Date.now()}`, `data/content.json?v=${Date.now()}`];
-  for (const url of urls) {
-    try {
-      const response = await fetch(url, { cache: 'no-store' });
-      if (response.ok) return await response.json();
-    } catch (error) {
-      // Try the next public source.
-    }
-  }
+async function fetchApiContent() {
   try {
     const apiResponse = await fetch(`${CONTENT_API_URL}&v=${Date.now()}`, {
       cache: 'no-store',
@@ -121,29 +112,54 @@ async function loadContent() {
       if (file.content) return JSON.parse(base64ToUtf8(file.content));
     }
   } catch (error) {
-    // All content sources are temporarily unavailable.
+    // Continue with public content sources.
   }
+  return null;
+}
+
+async function loadContent(forceFresh = false) {
+  if (forceFresh) {
+    const apiContent = await fetchApiContent();
+    if (apiContent) return apiContent;
+  }
+  const urls = [`${CONTENT_URL}?v=${Date.now()}`, `data/content.json?v=${Date.now()}`];
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, { cache: 'no-store' });
+      if (response.ok) return await response.json();
+    } catch (error) {
+      // Try the next public source.
+    }
+  }
+  const apiContent = await fetchApiContent();
+  if (apiContent) return apiContent;
   throw new Error('Content unavailable');
 }
 
-async function refreshContent() {
+function acceptContent(data) {
+  if (!data || typeof data !== 'object') return;
+  const nextFingerprint = JSON.stringify(data);
+  if (nextFingerprint !== contentFingerprint) {
+    contentFingerprint = nextFingerprint;
+    applySiteContent(data);
+  }
+}
+
+async function refreshContent(forceFresh = false) {
   if (document.visibilityState === 'hidden') return;
   try {
-    const data = await loadContent();
-    const nextFingerprint = JSON.stringify(data);
-    if (nextFingerprint !== contentFingerprint) {
-      contentFingerprint = nextFingerprint;
-      applySiteContent(data);
-    }
+    const data = await loadContent(forceFresh);
+    acceptContent(data);
     errorElement.hidden = true;
   } catch (error) {
     if (!contentFingerprint) errorElement.hidden = false;
   }
 }
 
-refreshContent();
+try { acceptContent(JSON.parse(localStorage.getItem('portfolio-latest-content') || 'null')); } catch (error) { /* Ignore invalid local cache. */ }
+refreshContent(true);
 setInterval(refreshContent, 5000);
-window.addEventListener('focus', refreshContent);
-window.addEventListener('storage', (event) => { if (event.key === 'portfolio-content-updated') refreshContent(); });
-if (contentChannel) contentChannel.addEventListener('message', refreshContent);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshContent(); });
+window.addEventListener('focus', () => refreshContent(true));
+window.addEventListener('storage', (event) => { if (event.key === 'portfolio-latest-content' && event.newValue) { try { acceptContent(JSON.parse(event.newValue)); } catch (error) { refreshContent(true); } } });
+if (contentChannel) contentChannel.addEventListener('message', (event) => { if (event.data?.content) acceptContent(event.data.content); else refreshContent(true); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshContent(true); });
