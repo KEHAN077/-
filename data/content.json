@@ -201,6 +201,12 @@
       "published": true,
       "hoverImages": [
         "media/1785832684455-83982399578668ea2ececedf156fcdd7.jpg"
+      ],
+      "hoverImageSizes": [
+        {
+          "width": "480",
+          "height": "360"
+        }
       ]
     },
     {
@@ -231,5 +237,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T10:45:45.608Z"
+  "updatedAt": "2026-08-04T10:56:35.634Z"
 }
