@@ -194,18 +194,23 @@ if (scrollPacman) {
   let stopTimer = 0;
   let celebrationTimer = 0;
   let celebrated = false;
+  const dotPalette = ['#3157ff', '#ff4f9a', '#20d9bd', '#9f4dff', '#ff8a2b', '#73c91f'];
+  const refreshDotColor = (dot) => { dot.style.background = dotPalette[Math.floor(Math.random() * dotPalette.length)]; };
   const updateScrollPacman = () => {
     scrollFrame = 0;
     const maximum = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const progress = Math.min(1, Math.max(0, window.scrollY / maximum));
-    const travel = Math.max(0, scrollPacman.clientHeight - 52);
+    const travel = Math.max(0, scrollPacman.clientHeight - 64);
     const pacmanY = Math.round(travel * progress);
     pacman.style.transform = `translateY(${pacmanY}px)`;
     firework.style.transform = `translateY(${pacmanY}px)`;
     dots.forEach((dot, index) => {
       const dotProgress = index / Math.max(1, dots.length - 1);
-      dot.classList.toggle('visible', dotProgress <= Math.min(1, progress + .25));
-      dot.classList.toggle('eaten', dotProgress <= progress + .002);
+      const shouldBeVisible = dotProgress <= Math.min(1, progress + .25);
+      const shouldBeEaten = index === dots.length - 1 ? progress >= .998 : dotProgress < progress - .002;
+      if ((shouldBeVisible && !dot.classList.contains('visible')) || (dot.classList.contains('eaten') && !shouldBeEaten)) refreshDotColor(dot);
+      dot.classList.toggle('visible', shouldBeVisible);
+      dot.classList.toggle('eaten', shouldBeEaten);
     });
     if (progress >= .998 && !celebrated) {
       celebrated = true;
