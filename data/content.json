@@ -32,6 +32,15 @@
     "contactCta": "一起把它做出来。",
     "profileImage": "media/1785814987357-avatar.png",
     "profileImageAlt": "KEHAN 的头像",
+    "fontNav": "13",
+    "fontHero": "100",
+    "fontIntro": "16",
+    "fontSection": "66",
+    "fontProject": "22",
+    "fontAbout": "66",
+    "fontBody": "18",
+    "fontContact": "92",
+    "fontCard": "13",
     "capabilities": [
       {
         "title": "电路与硬件",
@@ -72,7 +81,7 @@
     "description": "硬件工程师 KEHAN 的个人项目作品集",
     "name": "KEHAN",
     "eyebrow": "HARDWARE ENGINEER / 2026",
-    "heroTitle": "把想法，<em>做成真实完美硬件。</em>",
+    "heroTitle": "把你说我想法，<em>做成真实完美硬件。</em>",
     "intro": "你好，我是 KEHAN，一名专注于硬件产品与原型验证的硬件工程师。",
     "aboutTitle": "从想法到可运行原型，<br><em>每一步都清晰可验证。</em>",
     "aboutCopy": "我关注需求、实现和验证之间的完整闭环，用快速迭代把复杂问题变成可靠、清晰的硬件方案。",
@@ -178,5 +187,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T03:45:30.636Z"
+  "updatedAt": "2026-08-04T04:30:40.393Z"
 }
