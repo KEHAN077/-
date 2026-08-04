@@ -108,10 +108,10 @@
       "description": "Ebook 是一款基于 ESP32-S3 的 2.7 寸墨水屏阅读器，支持触摸、拨码与 TF 卡扩展，内置阅读、音乐、天气、时钟等应用，采用自研 UI 框架，适合开源学习与产品二次开发。",
       "category": "brand",
       "label": "BRAND IDENTITY",
-      "year": "2020",
+      "year": "2026",
       "mediaType": "image",
       "media": "media/1785746369939--_20260709095504_292_142.jpg",
-      "alt": "室内空间与植物",
+      "alt": "墨水屏幕",
       "link": "https://oshwhub.com/irex142359/project_xlbhvypw",
       "layout": "large",
       "published": true,
@@ -237,5 +237,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T11:08:56.059Z"
+  "updatedAt": "2026-08-04T11:09:48.421Z"
 }
