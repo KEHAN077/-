@@ -5,6 +5,7 @@ let projects = [];
 let siteContent = {};
 let currentFilter = 'all';
 let contentFingerprint = '';
+let contentVersion = 0;
 const contentChannel = 'BroadcastChannel' in window ? new BroadcastChannel('portfolio-content') : null;
 
 const REPOSITORY_RAW_ROOT = 'https://raw.githubusercontent.com/KEHAN077/-/main/';
@@ -66,8 +67,8 @@ function applySiteContent(data) {
     '[data-brand-primary]': ['brandPrimary', 'KH'], '[data-brand-secondary]': ['brandSecondary', '//HW'],
     '[data-nav-work]': ['navWork', '项目'], '[data-nav-about]': ['navAbout', '方法'], '[data-nav-contact]': ['navContact', '联系'], '[data-nav-status]': ['navStatus', 'HARDWARE ENGINEER'],
     '[data-eyebrow]': ['eyebrow', 'HARDWARE ENGINEER / 2026'], '[data-intro]': ['intro', ''], '[data-hero-cta]': ['heroCta', '查看项目'],
-    '[data-profile-label]': ['profileLabel', 'PROFILE_01'], '[data-profile-status]': ['profileStatus', 'ONLINE'], '[data-chip-mark]': ['chipMark', 'KH'], '[data-revision]': ['revision', 'REV.26'],
-    '[data-role-label]': ['roleLabel', 'ROLE'], '[data-role]': ['role', 'HARDWARE ENGINEER'], '[data-workflow-label]': ['workflowLabel', 'WORKFLOW'], '[data-workflow]': ['workflow', 'BUILD / TEST / ITERATE'], '[data-output-label]': ['outputLabel', 'OUTPUT'], '[data-output]': ['output', 'WORKING PROTOTYPES'],
+    '[data-profile-label]': ['profileLabel', 'PROFILE_01'], '[data-profile-status]': ['profileStatus', 'ONLINE'], '[data-role]': ['role', 'HARDWARE ENGINEER'],
+    '[data-workflow-label]': ['workflowLabel', 'WORKFLOW'], '[data-workflow]': ['workflow', 'BUILD / TEST / ITERATE'], '[data-output-label]': ['outputLabel', 'OUTPUT'], '[data-output]': ['output', 'WORKING PROTOTYPES'],
     '[data-projects-eyebrow]': ['projectsEyebrow', 'ENGINEERING LOG'], '[data-projects-title]': ['projectsTitle', '项目记录'],
     '[data-filter-all]': ['filterAll', '全部'], '[data-filter-brand]': ['filterBrand', '产品硬件'], '[data-filter-digital]': ['filterDigital', '嵌入式'], '[data-filter-editorial]': ['filterEditorial', '研发记录'],
     '[data-about-eyebrow]': ['aboutEyebrow', 'HOW I WORK'], '[data-about-code]': ['aboutCode', 'SYS / 04'], '[data-about-copy]': ['aboutCopy', ''],
@@ -79,17 +80,24 @@ function applySiteContent(data) {
   const processSteps = Array.isArray(site.processSteps) ? site.processSteps : [];
   document.querySelectorAll('.process-list li').forEach((item, index) => { const value = processSteps[index]; if (!value) return; item.querySelector('b').textContent = value.title || ''; item.querySelector('small').textContent = value.code || ''; });
   const profileImage = document.querySelector('[data-profile-image]');
-  const chip = document.querySelector('[data-chip]');
   const profileImageUrl = safeUrl(liveMediaUrl(site.profileImage || ''));
   if (profileImage && site.profileImage && profileImageUrl !== '#') {
     profileImage.src = profileImageUrl;
     profileImage.alt = site.profileImageAlt || `${site.name || 'KEHAN'} 的头像`;
     profileImage.hidden = false;
-    if (chip) chip.hidden = true;
   } else {
     if (profileImage) { profileImage.hidden = true; profileImage.removeAttribute('src'); }
-    if (chip) chip.hidden = false;
   }
+  const fontSizes = {
+    '--font-nav': ['fontNav', 10, 30], '--font-hero': ['fontHero', 34, 160], '--font-intro': ['fontIntro', 12, 32],
+    '--font-section': ['fontSection', 28, 100], '--font-project': ['fontProject', 14, 48], '--font-about': ['fontAbout', 28, 100],
+    '--font-body': ['fontBody', 12, 32], '--font-contact': ['fontContact', 32, 120], '--font-card': ['fontCard', 10, 28]
+  };
+  Object.entries(fontSizes).forEach(([variable, [key, min, max]]) => {
+    const value = Number(site[key]);
+    if (Number.isFinite(value)) document.documentElement.style.setProperty(variable, `${Math.min(max, Math.max(min, value))}px`);
+    else document.documentElement.style.removeProperty(variable);
+  });
   document.querySelector('[data-year]').textContent = new Date().getFullYear();
   document.querySelectorAll('[data-email-link]').forEach((link) => { link.href = `mailto:${site.email || ''}`; });
   const emailText = document.querySelector('[data-email]'); if (emailText) emailText.textContent = site.email || '';
@@ -139,8 +147,12 @@ async function loadContent(forceFresh = false) {
 function acceptContent(data) {
   if (!data || typeof data !== 'object') return;
   const nextFingerprint = JSON.stringify(data);
+  const nextVersion = Date.parse(data.updatedAt || '') || 0;
+  if (contentFingerprint && nextVersion < contentVersion) return;
+  if (contentFingerprint && contentVersion > 0 && nextVersion === 0) return;
   if (nextFingerprint !== contentFingerprint) {
     contentFingerprint = nextFingerprint;
+    contentVersion = nextVersion;
     applySiteContent(data);
   }
 }
