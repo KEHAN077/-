@@ -36,7 +36,7 @@
     "fontHero": "100",
     "fontIntro": "16",
     "fontSection": "66",
-    "fontProject": "22",
+    "fontProject": "44",
     "fontAbout": "16",
     "fontBody": "18",
     "fontContact": "92",
@@ -237,5 +237,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T11:06:13.043Z"
+  "updatedAt": "2026-08-04T11:06:42.563Z"
 }
