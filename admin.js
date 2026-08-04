@@ -187,8 +187,9 @@ async function saveAll() {
       result = await github(path, { method: 'PUT', body: JSON.stringify(payload()) });
     }
     state.contentSha = result.content.sha; state.dirty = false;
+    localStorage.setItem('portfolio-latest-content', JSON.stringify(state.content));
     localStorage.setItem('portfolio-content-updated', String(Date.now()));
-    if ('BroadcastChannel' in window) { const channel = new BroadcastChannel('portfolio-content'); channel.postMessage({ sha: state.contentSha }); channel.close(); }
+    if ('BroadcastChannel' in window) { const channel = new BroadcastChannel('portfolio-content'); channel.postMessage({ sha: state.contentSha, content: state.content }); channel.close(); }
     setStatus('发布成功，已通知前台；打开的前台页面会在 5 秒内自动更新', 'success');
   } catch (error) { setStatus(error.message, 'error'); alert(`发布失败：${error.message}`); } finally { button.disabled = false; }
 }
