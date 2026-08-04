@@ -11,6 +11,14 @@
 .contact h2>span,.contact h2 a>span{font:inherit;vertical-align:baseline}
 .contact h2 a>b{font:44px "DM Mono",monospace;font-weight:400;vertical-align:top}
 
+body{background:radial-gradient(circle at 7% 6%,rgba(49,87,255,.14),transparent 27rem),radial-gradient(circle at 94% 21%,rgba(159,77,255,.12),transparent 30rem),radial-gradient(circle at 14% 76%,rgba(29,214,190,.1),transparent 28rem),linear-gradient(180deg,#f7f9ff 0%,#eefaff 38%,#faf5ff 69%,#f4f7f1 100%);background-attachment:fixed}
+.nav{border-bottom-color:rgba(77,90,130,.22)}
+.hero,.work,.contact{position:relative}
+.hero:before,.work:before,.contact:before{content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%;filter:blur(2px)}
+.hero:before{width:240px;height:240px;left:-150px;top:180px;background:rgba(63,102,255,.08)}
+.work:before{width:300px;height:300px;right:-190px;top:140px;background:rgba(159,77,255,.075)}
+.contact:before{width:260px;height:260px;left:-170px;top:80px;background:rgba(29,214,190,.075)}
+
 .engineer-card{isolation:isolate;padding:28px;gap:22px;background:radial-gradient(circle at 12% 10%,rgba(29,255,205,.5),transparent 30%),radial-gradient(circle at 92% 18%,rgba(159,77,255,.68),transparent 35%),radial-gradient(circle at 72% 92%,rgba(44,89,255,.82),transparent 42%),linear-gradient(145deg,#071c2d 8%,#1b1240 52%,#07152c 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13),0 22px 55px rgba(49,87,255,.2)}
 .engineer-card:before{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.065) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.065) 1px,transparent 1px);background-size:46px 46px;opacity:.55;mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.65) 48%,transparent 100%)}
 .engineer-card:after{content:"";position:absolute;z-index:0;width:210px;height:210px;right:-86px;bottom:90px;border-radius:50%;pointer-events:none;background:rgba(70,238,255,.2);filter:blur(16px)}
