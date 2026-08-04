@@ -9,14 +9,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260803-3" />
-    <link rel="stylesheet" href="content.css?v=20260803-3" />
+    <link rel="stylesheet" href="styles.css?v=20260804-1" />
+    <link rel="stylesheet" href="content.css?v=20260804-1" />
   </head>
   <body>
     <header class="nav wrap">
-      <a class="brand" href="#top" aria-label="回到首页"><span>KH</span><b>//HW</b></a>
-      <nav aria-label="主导航"><a href="#work">项目</a><a href="#about">方法</a><a href="#contact">联系</a></nav>
-      <div class="nav-status"><i></i><span>HARDWARE ENGINEER</span></div>
+      <a class="brand" href="#top" aria-label="回到首页"><span data-brand-primary>KH</span><b data-brand-secondary>//HW</b></a>
+      <nav aria-label="主导航"><a href="#work" data-nav-work>项目</a><a href="#about" data-nav-about>方法</a><a href="#contact" data-nav-contact>联系</a></nav>
+      <div class="nav-status"><i></i><span data-nav-status>HARDWARE ENGINEER</span></div>
     </header>
 
     <main id="top">
@@ -26,18 +26,18 @@
           <h1 data-hero-title>把想法，<em>做成真实硬件。</em></h1>
           <div class="hero-intro">
             <p data-intro>你好，我是 KEHAN，一名专注于硬件产品与原型验证的硬件工程师。</p>
-            <a class="primary-link" href="#work">查看项目 <span>↓</span></a>
+            <a class="primary-link" href="#work"><span data-hero-cta>查看项目</span> <b>↓</b></a>
           </div>
         </div>
 
         <aside class="engineer-card" aria-label="工程师信息概览">
           <div class="board-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-          <div class="card-top"><span>PROFILE_01</span><span class="online"><i></i> ONLINE</span></div>
-          <div class="chip-mark"><span>KH</span><small>REV.26</small></div>
+          <div class="card-top"><span data-profile-label>PROFILE_01</span><span class="online"><i></i> <b data-profile-status>ONLINE</b></span></div>
+          <div class="chip-mark"><span data-chip-mark>KH</span><small data-revision>REV.26</small></div>
           <dl>
-            <div><dt>ROLE</dt><dd>HARDWARE ENGINEER</dd></div>
-            <div><dt>WORKFLOW</dt><dd>BUILD / TEST / ITERATE</dd></div>
-            <div><dt>OUTPUT</dt><dd>WORKING PROTOTYPES</dd></div>
+            <div><dt data-role-label>ROLE</dt><dd data-role>HARDWARE ENGINEER</dd></div>
+            <div><dt data-workflow-label>WORKFLOW</dt><dd data-workflow>BUILD / TEST / ITERATE</dd></div>
+            <div><dt data-output-label>OUTPUT</dt><dd data-output>WORKING PROTOTYPES</dd></div>
           </dl>
         </aside>
       </section>
@@ -53,8 +53,8 @@
 
       <section id="work" class="work wrap">
         <div class="section-heading">
-          <div><p class="eyebrow">ENGINEERING LOG</p><h2>项目记录<sup data-project-count>(00)</sup></h2></div>
-          <div class="filters" aria-label="项目筛选"><button class="active" data-filter="all">全部</button><button data-filter="brand">产品硬件</button><button data-filter="digital">嵌入式</button><button data-filter="editorial">研发记录</button></div>
+          <div><p class="eyebrow" data-projects-eyebrow>ENGINEERING LOG</p><h2><span data-projects-title>项目记录</span><sup data-project-count>(00)</sup></h2></div>
+          <div class="filters" aria-label="项目筛选"><button class="active" data-filter="all" data-filter-all>全部</button><button data-filter="brand" data-filter-brand>产品硬件</button><button data-filter="digital" data-filter-digital>嵌入式</button><button data-filter="editorial" data-filter-editorial>研发记录</button></div>
         </div>
         <div class="projects" id="projects" aria-live="polite"></div>
         <p class="load-error" id="load-error" hidden>内容暂时未能加载，请稍后刷新页面。</p>
@@ -62,7 +62,7 @@
 
       <section id="about" class="about">
         <div class="wrap about-grid">
-          <div class="about-lead"><p class="eyebrow">HOW I WORK</p><span class="about-code">SYS / 04</span></div>
+          <div class="about-lead"><p class="eyebrow" data-about-eyebrow>HOW I WORK</p><span class="about-code" data-about-code>SYS / 04</span></div>
           <div>
             <h2 data-about-title>从想法到可运行原型，<br /><em>每一步都清晰可验证。</em></h2>
             <p class="about-copy" data-about-copy>我关注需求、实现和验证之间的完整闭环，用快速迭代把复杂问题变成可靠、清晰的硬件方案。</p>
@@ -77,11 +77,11 @@
       </section>
 
       <section id="contact" class="contact wrap">
-        <div class="contact-label"><p class="eyebrow">START A PROJECT</p><span>AVAILABLE / 2026</span></div>
-        <h2>有个硬件想法？<br /><a data-email-link href="mailto:hello@example.com">一起把它做出来。<span>↗</span></a></h2>
+        <div class="contact-label"><p class="eyebrow" data-contact-eyebrow>START A PROJECT</p><span data-contact-status>AVAILABLE / 2026</span></div>
+        <h2><span data-contact-title>有个硬件想法？</span><br /><a data-email-link href="mailto:hello@example.com"><span data-contact-cta>一起把它做出来。</span><b>↗</b></a></h2>
         <div class="contact-bottom"><span>© <span data-year>2026</span> <span data-name>KEHAN</span></span><a class="email-bottom" data-email-link href="mailto:hello@example.com"><span data-email>HELLO@EXAMPLE.COM</span></a><div id="social-links"></div></div>
       </section>
     </main>
-    <script src="script.js?v=20260803-3"></script>
+    <script src="script.js?v=20260804-1"></script>
   </body>
 </html>
