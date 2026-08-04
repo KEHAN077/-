@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css?v=20260804-1" />
-    <link rel="stylesheet" href="content.css?v=20260804-2" />
+    <link rel="stylesheet" href="content.css?v=20260804-4" />
   </head>
   <body>
     <header class="nav wrap">
@@ -31,12 +31,10 @@
         </div>
 
         <aside class="engineer-card" aria-label="工程师信息概览">
-          <div class="board-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <div class="card-top"><span data-profile-label>PROFILE_01</span><span class="online"><i></i> <b data-profile-status>ONLINE</b></span></div>
-          <div class="chip-mark" data-chip><span data-chip-mark>KH</span><small data-revision>REV.26</small></div>
-          <img class="profile-image" data-profile-image src="" alt="工程师头像" hidden />
+          <div class="profile-portrait"><img class="profile-image" data-profile-image src="" alt="工程师头像" hidden /><span aria-hidden="true"></span></div>
+          <p class="profile-role" data-role>HARDWARE ENGINEER</p>
           <dl>
-            <div><dt data-role-label>ROLE</dt><dd data-role>HARDWARE ENGINEER</dd></div>
             <div><dt data-workflow-label>WORKFLOW</dt><dd data-workflow>BUILD / TEST / ITERATE</dd></div>
             <div><dt data-output-label>OUTPUT</dt><dd data-output>WORKING PROTOTYPES</dd></div>
           </dl>
@@ -83,6 +81,6 @@
         <div class="contact-bottom"><span>© <span data-year>2026</span> <span data-name>KEHAN</span></span><a class="email-bottom" data-email-link href="mailto:hello@example.com"><span data-email>HELLO@EXAMPLE.COM</span></a><div id="social-links"></div></div>
       </section>
     </main>
-    <script src="script.js?v=20260804-3"></script>
+    <script src="script.js?v=20260804-4"></script>
   </body>
 </html>
