@@ -37,7 +37,7 @@
     "fontIntro": "16",
     "fontSection": "66",
     "fontProject": "22",
-    "fontAbout": "66",
+    "fontAbout": "16",
     "fontBody": "18",
     "fontContact": "92",
     "fontCard": "15",
@@ -237,5 +237,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T11:04:16.251Z"
+  "updatedAt": "2026-08-04T11:06:13.043Z"
 }
