@@ -188,17 +188,20 @@
     },
     {
       "id": "night",
-      "title": "夜航 · 音乐视觉",
-      "description": "Ebook 是一款基于 ESP32-S3 的 2.7 寸墨水屏阅读器，支持触摸、拨码与 TF 卡扩展，内置阅读、音乐、天气、时钟等应用，采用自研 UI 框架，适合开源学习与产品二次开发。",
-      "category": "editorial",
+      "title": "自绕线无刷电机",
+      "description": "手工制作无刷电机，自行绕组，36槽40极电机",
+      "category": "brand",
       "label": "ART DIRECTION",
-      "year": "2024",
+      "year": "2026",
       "mediaType": "image",
-      "media": "media/1785808515092-d3df3c3d07671bce5d4c9869e10e1ede.png",
+      "media": "media/1785832591932-b45fbef5a45b3a27e4137be3f084f7d1.jpg",
       "alt": "演出灯光",
       "link": "",
       "layout": "normal",
-      "published": true
+      "published": true,
+      "hoverImages": [
+        "media/1785832684455-83982399578668ea2ececedf156fcdd7.jpg"
+      ]
     },
     {
       "id": "project-1785832007235",
@@ -228,5 +231,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T08:30:43.330Z"
+  "updatedAt": "2026-08-04T08:38:40.901Z"
 }
