@@ -8,7 +8,7 @@
     "navStatus": "HARDWARE ENGINEER",
     "heroCta": "查看项目",
     "profileLabel": "刘可晗",
-    "profileStatus": "SYNC_TEST",
+    "profileStatus": "ONLINE",
     "chipMark": "KH",
     "revision": "REV.26",
     "roleLabel": "ROLE",
@@ -176,5 +176,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T03:14:45.211Z"
+  "updatedAt": "2026-08-04T03:20:39.813Z"
 }
