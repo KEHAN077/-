@@ -1,5 +1,71 @@
 {
   "site": {
+    "brandPrimary": "KH",
+    "brandSecondary": "//HW",
+    "navWork": "项目",
+    "navAbout": "方法",
+    "navContact": "联系",
+    "navStatus": "HARDWARE ENGINEER",
+    "heroCta": "查看项目",
+    "profileLabel": "PROFILE_01",
+    "profileStatus": "ONLINE",
+    "chipMark": "KH",
+    "revision": "REV.26",
+    "roleLabel": "ROLE",
+    "role": "HARDWARE ENGINEER",
+    "workflowLabel": "WORKFLOW",
+    "workflow": "BUILD / TEST / ITERATE",
+    "outputLabel": "OUTPUT",
+    "output": "WORKING PROTOTYPES",
+    "projectsEyebrow": "ENGINEERING LOG",
+    "projectsTitle": "项目记录",
+    "filterAll": "全部",
+    "filterBrand": "产品硬件",
+    "filterDigital": "嵌入式",
+    "filterEditorial": "研发记录",
+    "projectLinkLabel": "VIEW PROJECT ↗",
+    "aboutEyebrow": "HOW I WORK",
+    "aboutCode": "SYS / 04",
+    "contactEyebrow": "START A PROJECT",
+    "contactStatus": "AVAILABLE / 2026",
+    "contactTitle": "有个硬件想法？",
+    "contactCta": "一起把它做出来。",
+    "capabilities": [
+      {
+        "title": "电路与硬件",
+        "code": "CIRCUIT"
+      },
+      {
+        "title": "快速原型",
+        "code": "PROTOTYPE"
+      },
+      {
+        "title": "测试调试",
+        "code": "DEBUG"
+      },
+      {
+        "title": "持续迭代",
+        "code": "ITERATE"
+      }
+    ],
+    "processSteps": [
+      {
+        "title": "定义问题",
+        "code": "DEFINE"
+      },
+      {
+        "title": "搭建原型",
+        "code": "BUILD"
+      },
+      {
+        "title": "测试验证",
+        "code": "TEST"
+      },
+      {
+        "title": "迭代交付",
+        "code": "ITERATE"
+      }
+    ],
     "title": "KEHAN — 硬件工程师作品集",
     "description": "硬件工程师 KEHAN 的个人项目作品集",
     "name": "KEHAN",
@@ -49,7 +115,7 @@
       "mediaType": "image",
       "media": "media/1785746389306-296_142_-.jpg",
       "alt": "手机应用界面设计",
-      "link": "#contact",
+      "link": "",
       "layout": "normal",
       "published": true
     },
@@ -63,7 +129,7 @@
       "mediaType": "image",
       "media": "media/1785750154185-17b81cc2a8dfc910c6cc65a4ec3fcadc.jpg",
       "alt": "杂志与桌面",
-      "link": "#contact",
+      "link": "",
       "layout": "normal",
       "published": true
     },
@@ -77,7 +143,7 @@
       "mediaType": "image",
       "media": "media/1785748643202-54f185e06934154891d9c94c3fef2923.png",
       "alt": "建筑表面与阳光",
-      "link": "#contact",
+      "link": "",
       "layout": "normal",
       "published": true
     },
@@ -91,7 +157,7 @@
       "mediaType": "image",
       "media": "media/1785754482207-6a4fbe8ca066d2fd3bfa3282cc36193f.jpg",
       "alt": "复古电子游戏机",
-      "link": "#contact",
+      "link": "",
       "layout": "wide",
       "published": true
     },
@@ -105,7 +171,7 @@
       "mediaType": "image",
       "media": "media/1785808515092-d3df3c3d07671bce5d4c9869e10e1ede.png",
       "alt": "演出灯光",
-      "link": "#contact",
+      "link": "",
       "layout": "normal",
       "published": true
     }
