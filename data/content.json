@@ -40,7 +40,7 @@
     "fontAbout": "16",
     "fontBody": "18",
     "fontContact": "92",
-    "fontCard": "15",
+    "fontCard": "20",
     "capabilities": [
       {
         "title": "电路与硬件",
@@ -237,5 +237,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T11:07:39.172Z"
+  "updatedAt": "2026-08-04T11:08:56.059Z"
 }
