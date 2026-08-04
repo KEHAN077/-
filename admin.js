@@ -13,6 +13,7 @@ const DEFAULT_SITE = {
   roleLabel: 'ROLE', role: 'HARDWARE ENGINEER', workflowLabel: 'WORKFLOW', workflow: 'BUILD / TEST / ITERATE', outputLabel: 'OUTPUT', output: 'WORKING PROTOTYPES',
   projectsEyebrow: 'ENGINEERING LOG', projectsTitle: '项目记录', filterAll: '全部', filterBrand: '产品硬件', filterDigital: '嵌入式', filterEditorial: '研发记录', projectLinkLabel: 'VIEW PROJECT ↗',
   aboutEyebrow: 'HOW I WORK', aboutCode: 'SYS / 04', contactEyebrow: 'START A PROJECT', contactStatus: 'AVAILABLE / 2026', contactTitle: '有个硬件想法？', contactCta: '一起把它做出来。',
+  profileImage: '', profileImageAlt: 'KEHAN 的头像',
   capabilities: [{ title: '电路与硬件', code: 'CIRCUIT' }, { title: '快速原型', code: 'PROTOTYPE' }, { title: '测试调试', code: 'DEBUG' }, { title: '持续迭代', code: 'ITERATE' }],
   processSteps: [{ title: '定义问题', code: 'DEFINE' }, { title: '搭建原型', code: 'BUILD' }, { title: '测试验证', code: 'TEST' }, { title: '迭代交付', code: 'ITERATE' }]
 };
@@ -84,6 +85,16 @@ function fillSiteForm() {
   };
   bindPairList('#capabilities', 'capabilities');
   bindPairList('#process-steps', 'processSteps');
+  const profileImageInput = $('[data-site="profileImage"]');
+  const updateAvatarPreview = () => {
+    const preview = $('#avatar-preview');
+    const url = profileImageInput.value.trim();
+    preview.hidden = !url;
+    if (url) preview.src = url;
+    else preview.removeAttribute('src');
+  };
+  profileImageInput.addEventListener('input', updateAvatarPreview);
+  updateAvatarPreview();
 }
 
 function renderList() {
@@ -141,10 +152,28 @@ async function uploadMedia(file) {
   const project = selectedProject(); project.media = uploaded.content.path; project.mediaType = file.type.startsWith('video/') ? 'video' : 'image'; markDirty(); renderList(); renderProjectEditor(); setStatus('媒体上传成功，请点击“保存并发布”完成作品更新', 'success');
 }
 
+async function uploadAvatar(file) {
+  if (!file) return;
+  if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) throw new Error('请选择 JPG、PNG、WebP 或 GIF 图片。');
+  if (file.size > 15 * 1024 * 1024) throw new Error('头像图片不能超过 15 MB。');
+  const button = $('#upload-avatar'); button.disabled = true; button.textContent = '正在上传…'; setStatus('正在上传头像，请勿关闭页面');
+  const extension = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const path = `media/${Date.now()}-avatar.${extension || 'jpg'}`;
+  const content = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
+  const uploaded = await github(apiPath(path), { method: 'PUT', body: JSON.stringify({ message: 'Upload profile image', content, branch: state.branch }) });
+  state.content.site.profileImage = uploaded.content.path;
+  $('[data-site="profileImage"]').value = uploaded.content.path;
+  $('#avatar-preview').src = uploaded.content.path;
+  $('#avatar-preview').hidden = false;
+  markDirty(); setStatus('头像上传成功，请点击“保存并发布”使前台显示', 'success');
+  button.disabled = false; button.textContent = '上传头像图片';
+}
+
 async function saveAll() {
   const button = $('#save-all'); button.disabled = true; setStatus('正在发布…');
   try {
     const path = apiPath('data/content.json');
+    state.content.updatedAt = new Date().toISOString();
     const payload = () => ({ message: `Update portfolio content ${new Date().toISOString()}`, content: utf8ToBase64(`${JSON.stringify(state.content, null, 2)}\n`), sha: state.contentSha, branch: state.branch });
     const latest = await github(`${path}?ref=${encodeURIComponent(state.branch)}&v=${Date.now()}`);
     state.contentSha = latest.sha;
@@ -157,7 +186,10 @@ async function saveAll() {
       state.contentSha = refreshed.sha;
       result = await github(path, { method: 'PUT', body: JSON.stringify(payload()) });
     }
-    state.contentSha = result.content.sha; state.dirty = false; setStatus('发布成功，刷新前台通常几秒内即可看到', 'success');
+    state.contentSha = result.content.sha; state.dirty = false;
+    localStorage.setItem('portfolio-content-updated', String(Date.now()));
+    if ('BroadcastChannel' in window) { const channel = new BroadcastChannel('portfolio-content'); channel.postMessage({ sha: state.contentSha }); channel.close(); }
+    setStatus('发布成功，已通知前台；打开的前台页面会在 5 秒内自动更新', 'success');
   } catch (error) { setStatus(error.message, 'error'); alert(`发布失败：${error.message}`); } finally { button.disabled = false; }
 }
 
@@ -169,6 +201,8 @@ $('#add-project').addEventListener('click', () => {
   const project = { id: `project-${Date.now()}`, title: '新作品', description: '', category: 'editorial', label: 'PROJECT', year: String(new Date().getFullYear()), mediaType: 'image', media: '', alt: '', link: '', layout: 'normal', published: false };
   state.content.projects.unshift(project); state.selectedId = project.id; markDirty(); renderList(); renderProjectEditor();
 });
+$('#upload-avatar').addEventListener('click', () => $('#avatar-file').click());
+$('#avatar-file').addEventListener('change', async (event) => { try { await uploadAvatar(event.target.files[0]); } catch (error) { setStatus(error.message, 'error'); alert(`头像上传失败：${error.message}`); const button = $('#upload-avatar'); button.disabled = false; button.textContent = '上传头像图片'; } event.target.value = ''; });
 $('#media-file').addEventListener('change', async (event) => { try { await uploadMedia(event.target.files[0]); } catch (error) { setStatus(error.message, 'error'); alert(`上传失败：${error.message}`); const button = $('#upload-media'); if (button) { button.disabled = false; button.textContent = '上传图片或视频'; } } event.target.value = ''; });
 $('#save-all').addEventListener('click', saveAll);
 $('#logout').addEventListener('click', () => { sessionStorage.removeItem('portfolio-token'); location.reload(); });
