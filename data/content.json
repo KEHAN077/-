@@ -199,7 +199,32 @@
       "link": "",
       "layout": "normal",
       "published": true
+    },
+    {
+      "id": "project-1785832007235",
+      "title": "新作品",
+      "description": "",
+      "category": "brand",
+      "label": "PROJECT",
+      "year": "2026",
+      "mediaType": "image",
+      "media": "media/1785832035911-7ea917f34aad4ce6ecf28e808f95e234.jpg",
+      "hoverImages": [],
+      "hoverImageSizes": [
+        {
+          "width": 260,
+          "height": 185
+        },
+        {
+          "width": 260,
+          "height": 185
+        }
+      ],
+      "alt": "",
+      "link": "",
+      "layout": "large",
+      "published": false
     }
   ],
-  "updatedAt": "2026-08-04T08:25:29.379Z"
+  "updatedAt": "2026-08-04T08:27:37.016Z"
 }
