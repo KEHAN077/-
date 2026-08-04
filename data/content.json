@@ -96,7 +96,7 @@
     {
       "id": "hillside",
       "title": "墨水屏",
-      "description": "",
+      "description": "Ebook 是一款基于 ESP32-S3 的 2.7 寸墨水屏阅读器，支持触摸、拨码与 TF 卡扩展，内置阅读、音乐、天气、时钟等应用，采用自研 UI 框架，适合开源学习与产品二次开发。",
       "category": "brand",
       "label": "BRAND IDENTITY",
       "year": "2020",
@@ -178,5 +178,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T03:44:46.948Z"
+  "updatedAt": "2026-08-04T03:45:30.636Z"
 }
