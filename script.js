@@ -188,16 +188,33 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 const scrollPacman = document.querySelector('.scroll-pacman');
 if (scrollPacman) {
   const pacman = scrollPacman.querySelector('.pixel-pacman');
+  const firework = scrollPacman.querySelector('.pacman-firework');
   const dots = [...scrollPacman.querySelectorAll('.scroll-dot')];
   let scrollFrame = 0;
   let stopTimer = 0;
+  let celebrationTimer = 0;
+  let celebrated = false;
   const updateScrollPacman = () => {
     scrollFrame = 0;
     const maximum = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const progress = Math.min(1, Math.max(0, window.scrollY / maximum));
-    const travel = Math.max(0, scrollPacman.clientHeight - 28);
-    pacman.style.transform = `translateY(${Math.round(travel * progress)}px)`;
-    dots.forEach((dot, index) => dot.classList.toggle('eaten', index / Math.max(1, dots.length - 1) <= progress));
+    const travel = Math.max(0, scrollPacman.clientHeight - 52);
+    const pacmanY = Math.round(travel * progress);
+    pacman.style.transform = `translateY(${pacmanY}px)`;
+    firework.style.transform = `translateY(${pacmanY}px)`;
+    dots.forEach((dot, index) => {
+      const dotProgress = index / Math.max(1, dots.length - 1);
+      dot.classList.toggle('visible', dotProgress <= Math.min(1, progress + .25));
+      dot.classList.toggle('eaten', dotProgress <= progress + .002);
+    });
+    if (progress >= .998 && !celebrated) {
+      celebrated = true;
+      scrollPacman.classList.add('celebrate');
+      clearTimeout(celebrationTimer);
+      celebrationTimer = setTimeout(() => scrollPacman.classList.remove('celebrate'), 1500);
+    } else if (progress < .85) {
+      celebrated = false;
+    }
     scrollPacman.classList.add('is-scrolling');
     clearTimeout(stopTimer);
     stopTimer = setTimeout(() => scrollPacman.classList.remove('is-scrolling'), 180);
