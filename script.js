@@ -2,6 +2,7 @@ const projectsElement = document.querySelector('#projects');
 const errorElement = document.querySelector('#load-error');
 const filterButtons = [...document.querySelectorAll('.filters button')];
 let projects = [];
+let siteContent = {};
 
 const REPOSITORY_RAW_ROOT = 'https://raw.githubusercontent.com/KEHAN077/-/main/';
 const CONTENT_URL = `${REPOSITORY_RAW_ROOT}data/content.json`;
@@ -25,7 +26,13 @@ function projectCard(project, index) {
     ? `<video src="${escapeHtml(safeUrl(liveMediaUrl(project.media)))}" ${project.poster ? `poster="${escapeHtml(safeUrl(liveMediaUrl(project.poster)))}"` : ''} muted loop playsinline controls preload="metadata"></video>`
     : `<img src="${escapeHtml(safeUrl(liveMediaUrl(project.media)))}" alt="${escapeHtml(project.alt || project.title)}" loading="lazy" />`;
   const number = String(index + 1).padStart(2, '0');
-  return `<article class="project${layout}" data-category="${escapeHtml(project.category || 'editorial')}"><a href="${escapeHtml(safeUrl(project.link || '#contact'))}"><div class="project-image">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</a></article>`;
+  const rawLink = String(project.link || '').trim();
+  const link = rawLink && rawLink !== '#' ? safeUrl(rawLink) : '';
+  const external = /^https?:/i.test(link);
+  const tag = link ? 'a' : 'div';
+  const attributes = link ? ` href="${escapeHtml(link)}"${external ? ' target="_blank" rel="noreferrer"' : ''}` : '';
+  const linkLabel = link ? (siteContent.projectLinkLabel || 'VIEW PROJECT ↗') : '';
+  return `<article class="project${layout}${link ? '' : ' project-no-link'}" data-category="${escapeHtml(project.category || 'editorial')}"><${tag} class="project-card"${attributes}><div class="project-image" data-link-label="${escapeHtml(linkLabel)}">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</${tag}></article>`;
 }
 
 function renderProjects(filter = 'all') {
@@ -42,17 +49,31 @@ function safeRichText(value) {
   return template.innerHTML;
 }
 function setHtml(selector, value) { const element = document.querySelector(selector); if (element && value) element.innerHTML = safeRichText(value); }
+function setText(selector, value, fallback = '') { const element = document.querySelector(selector); if (element) element.textContent = value ?? fallback; }
 
 function applySiteContent(data) {
   const site = data.site || {};
+  siteContent = site;
   document.title = site.title || document.title;
   const description = document.querySelector('meta[name="description"]');
   if (description && site.description) description.content = site.description;
   setHtml('[data-hero-title]', site.heroTitle); setHtml('[data-about-title]', site.aboutTitle);
-  document.querySelector('[data-eyebrow]').textContent = site.eyebrow || 'PORTFOLIO';
-  document.querySelector('[data-intro]').textContent = site.intro || '';
-  document.querySelector('[data-about-copy]').textContent = site.aboutCopy || '';
-  document.querySelector('[data-name]').textContent = site.name || 'LIN RAN';
+  const textFields = {
+    '[data-brand-primary]': ['brandPrimary', 'KH'], '[data-brand-secondary]': ['brandSecondary', '//HW'],
+    '[data-nav-work]': ['navWork', '项目'], '[data-nav-about]': ['navAbout', '方法'], '[data-nav-contact]': ['navContact', '联系'], '[data-nav-status]': ['navStatus', 'HARDWARE ENGINEER'],
+    '[data-eyebrow]': ['eyebrow', 'HARDWARE ENGINEER / 2026'], '[data-intro]': ['intro', ''], '[data-hero-cta]': ['heroCta', '查看项目'],
+    '[data-profile-label]': ['profileLabel', 'PROFILE_01'], '[data-profile-status]': ['profileStatus', 'ONLINE'], '[data-chip-mark]': ['chipMark', 'KH'], '[data-revision]': ['revision', 'REV.26'],
+    '[data-role-label]': ['roleLabel', 'ROLE'], '[data-role]': ['role', 'HARDWARE ENGINEER'], '[data-workflow-label]': ['workflowLabel', 'WORKFLOW'], '[data-workflow]': ['workflow', 'BUILD / TEST / ITERATE'], '[data-output-label]': ['outputLabel', 'OUTPUT'], '[data-output]': ['output', 'WORKING PROTOTYPES'],
+    '[data-projects-eyebrow]': ['projectsEyebrow', 'ENGINEERING LOG'], '[data-projects-title]': ['projectsTitle', '项目记录'],
+    '[data-filter-all]': ['filterAll', '全部'], '[data-filter-brand]': ['filterBrand', '产品硬件'], '[data-filter-digital]': ['filterDigital', '嵌入式'], '[data-filter-editorial]': ['filterEditorial', '研发记录'],
+    '[data-about-eyebrow]': ['aboutEyebrow', 'HOW I WORK'], '[data-about-code]': ['aboutCode', 'SYS / 04'], '[data-about-copy]': ['aboutCopy', ''],
+    '[data-contact-eyebrow]': ['contactEyebrow', 'START A PROJECT'], '[data-contact-status]': ['contactStatus', 'AVAILABLE / 2026'], '[data-contact-title]': ['contactTitle', '有个硬件想法？'], '[data-contact-cta]': ['contactCta', '一起把它做出来。'], '[data-name]': ['name', 'KEHAN']
+  };
+  Object.entries(textFields).forEach(([selector, [key, fallback]]) => setText(selector, site[key], fallback));
+  const capabilities = Array.isArray(site.capabilities) ? site.capabilities : [];
+  document.querySelectorAll('.capability-grid > div').forEach((item, index) => { const value = capabilities[index]; if (!value) return; setText.call(null, `.capability-grid > div:nth-child(${index + 1}) strong`, value.title, ''); setText.call(null, `.capability-grid > div:nth-child(${index + 1}) small`, value.code, ''); });
+  const processSteps = Array.isArray(site.processSteps) ? site.processSteps : [];
+  document.querySelectorAll('.process-list li').forEach((item, index) => { const value = processSteps[index]; if (!value) return; item.querySelector('b').textContent = value.title || ''; item.querySelector('small').textContent = value.code || ''; });
   document.querySelector('[data-year]').textContent = new Date().getFullYear();
   document.querySelectorAll('[data-email-link]').forEach((link) => { link.href = `mailto:${site.email || ''}`; });
   const emailText = document.querySelector('[data-email]'); if (emailText) emailText.textContent = site.email || '';
