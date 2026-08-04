@@ -201,6 +201,13 @@ if (scrollPacman) {
   let previousScrollY = window.scrollY;
   const dotPalette = ['#3157ff', '#ff4f9a', '#20d9bd', '#9f4dff', '#ff8a2b', '#73c91f'];
   const refreshDotColor = (dot) => { dot.style.background = dotPalette[Math.floor(Math.random() * dotPalette.length)]; };
+  const showProjectTip = () => {
+    projectTip.classList.remove('show');
+    void projectTip.offsetWidth;
+    projectTip.classList.add('show');
+    clearTimeout(tipTimer);
+    tipTimer = setTimeout(() => projectTip.classList.remove('show'), 5000);
+  };
   const updateScrollPacman = () => {
     scrollFrame = 0;
     const maximum = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -221,9 +228,7 @@ if (scrollPacman) {
     const workTrigger = workSection ? workSection.offsetTop - window.innerHeight * .42 : Number.POSITIVE_INFINITY;
     if (window.scrollY > previousScrollY && window.scrollY >= workTrigger && !tipShown) {
       tipShown = true;
-      projectTip.classList.add('show');
-      clearTimeout(tipTimer);
-      tipTimer = setTimeout(() => projectTip.classList.remove('show'), 3000);
+      showProjectTip();
     } else if (window.scrollY < workTrigger - 240) {
       tipShown = false;
       projectTip.classList.remove('show');
@@ -244,5 +249,6 @@ if (scrollPacman) {
   const requestPacmanUpdate = () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollPacman); };
   window.addEventListener('scroll', requestPacmanUpdate, { passive: true });
   window.addEventListener('resize', requestPacmanUpdate);
+  pacman.addEventListener('click', showProjectTip);
   updateScrollPacman();
 }
