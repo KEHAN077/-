@@ -81,7 +81,7 @@
     "description": "硬件工程师 KEHAN 的个人项目作品集",
     "name": "KEHAN",
     "eyebrow": "HARDWARE ENGINEER / 2026",
-    "heroTitle": "你说想法，<em>做成真实完美硬件。</em>",
+    "heroTitle": "你说想法，<em>我来实现</em>",
     "intro": "你好，我是 KEHAN，一名专注于硬件产品与原型验证的硬件工程师。",
     "aboutTitle": "从想法到可运行原型，<br><em>每一步都清晰可验证。</em>",
     "aboutCopy": "我关注需求、实现和验证之间的完整闭环，用快速迭代把复杂问题变成可靠、清晰的硬件方案。",
@@ -187,5 +187,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T05:59:42.391Z"
+  "updatedAt": "2026-08-04T06:10:21.104Z"
 }
