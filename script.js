@@ -14,6 +14,7 @@ const CONTENT_API_URL = 'https://api.github.com/repos/KEHAN077/-/contents/data/c
 
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
 const safeUrl = (value = '') => { const url = String(value).trim(); return /^(https?:|mailto:|#|\.\/|\.\.\/|\/|media\/)/i.test(url) ? url : '#'; };
+const previewDimension = (value, minimum, maximum, fallback) => { const number = Number.parseInt(value, 10); return Number.isFinite(number) ? Math.min(maximum, Math.max(minimum, number)) : fallback; };
 const base64ToUtf8 = (base64) => {
   const binary = atob(String(base64).replace(/\n/g, ''));
   return new TextDecoder().decode(Uint8Array.from(binary, (char) => char.charCodeAt(0)));
@@ -36,9 +37,12 @@ function projectCard(project, index) {
   const tag = link ? 'a' : 'div';
   const attributes = link ? ` href="${escapeHtml(link)}"${external ? ' target="_blank" rel="noreferrer"' : ''}` : '';
   const linkLabel = link ? (siteContent.projectLinkLabel || 'VIEW PROJECT ↗') : '';
-  const configuredHoverImages = Array.isArray(project.hoverImages) ? project.hoverImages.filter(Boolean).slice(0, 2) : [];
-  const hoverImages = configuredHoverImages.length ? configuredHoverImages : (project.mediaType === 'image' && project.media ? [project.media] : []);
-  const hoverGallery = hoverImages.length ? `<div class="project-hover-gallery" aria-hidden="true">${hoverImages.map((image, previewIndex) => `<img src="${escapeHtml(safeUrl(liveMediaUrl(image)))}" alt="" loading="lazy" data-preview="${previewIndex + 1}" />`).join('')}</div>` : '';
+  const configuredHoverImages = (Array.isArray(project.hoverImages) ? project.hoverImages : []).slice(0, 2).map((image, sourceIndex) => ({ image, sourceIndex })).filter((item) => item.image);
+  const hoverImages = configuredHoverImages.length ? configuredHoverImages : (project.mediaType === 'image' && project.media ? [{ image: project.media, sourceIndex: 0 }] : []);
+  const hoverImageSizes = Array.isArray(project.hoverImageSizes) ? project.hoverImageSizes : [];
+  const preparedHoverImages = hoverImages.map((item) => ({ ...item, width: previewDimension(hoverImageSizes[item.sourceIndex]?.width, 140, 480, 260), height: previewDimension(hoverImageSizes[item.sourceIndex]?.height, 100, 360, 185) }));
+  const hoverGalleryWidth = preparedHoverImages.reduce((largest, item) => Math.max(largest, item.width), 260);
+  const hoverGallery = preparedHoverImages.length ? `<div class="project-hover-gallery" aria-hidden="true" style="--preview-gallery-width:${hoverGalleryWidth}px">${preparedHoverImages.map((item, previewIndex) => `<img src="${escapeHtml(safeUrl(liveMediaUrl(item.image)))}" alt="" loading="lazy" data-preview="${previewIndex + 1}" style="--preview-width:${item.width}px;--preview-height:${item.height}px" />`).join('')}</div>` : '';
   const previewSide = index % 2 === 0 ? ' project-preview-left' : ' project-preview-right';
   return `<article class="project${layout}${previewSide}${link ? '' : ' project-no-link'}" data-category="${escapeHtml(project.category || 'editorial')}"><${tag} class="project-card"${attributes}>${hoverGallery}<div class="project-image" data-link-label="${escapeHtml(linkLabel)}">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</${tag}></article>`;
 }
