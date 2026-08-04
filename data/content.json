@@ -209,7 +209,9 @@
       "year": "2026",
       "mediaType": "image",
       "media": "media/1785832035911-7ea917f34aad4ce6ecf28e808f95e234.jpg",
-      "hoverImages": [],
+      "hoverImages": [
+        "media/1785832116400-8d4b5fb49c66f7503f2afcf46e314db0.jpg"
+      ],
       "hoverImageSizes": [
         {
           "width": 260,
@@ -226,5 +228,5 @@
       "published": false
     }
   ],
-  "updatedAt": "2026-08-04T08:27:37.016Z"
+  "updatedAt": "2026-08-04T08:28:46.809Z"
 }
