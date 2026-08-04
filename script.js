@@ -189,11 +189,16 @@ const scrollPacman = document.querySelector('.scroll-pacman');
 if (scrollPacman) {
   const pacman = scrollPacman.querySelector('.pixel-pacman');
   const firework = scrollPacman.querySelector('.pacman-firework');
+  const projectTip = scrollPacman.querySelector('.project-scroll-tip');
+  const workSection = document.querySelector('#work');
   const dots = [...scrollPacman.querySelectorAll('.scroll-dot')];
   let scrollFrame = 0;
   let stopTimer = 0;
   let celebrationTimer = 0;
+  let tipTimer = 0;
   let celebrated = false;
+  let tipShown = false;
+  let previousScrollY = window.scrollY;
   const dotPalette = ['#3157ff', '#ff4f9a', '#20d9bd', '#9f4dff', '#ff8a2b', '#73c91f'];
   const refreshDotColor = (dot) => { dot.style.background = dotPalette[Math.floor(Math.random() * dotPalette.length)]; };
   const updateScrollPacman = () => {
@@ -204,6 +209,7 @@ if (scrollPacman) {
     const pacmanY = Math.round(travel * progress);
     pacman.style.transform = `translateY(${pacmanY}px)`;
     firework.style.transform = `translateY(${pacmanY}px)`;
+    projectTip.style.transform = `translateY(${pacmanY}px)`;
     dots.forEach((dot, index) => {
       const dotProgress = index / Math.max(1, dots.length - 1);
       const shouldBeVisible = dotProgress <= Math.min(1, progress + .25);
@@ -212,6 +218,17 @@ if (scrollPacman) {
       dot.classList.toggle('visible', shouldBeVisible);
       dot.classList.toggle('eaten', shouldBeEaten);
     });
+    const workTrigger = workSection ? workSection.offsetTop - window.innerHeight * .42 : Number.POSITIVE_INFINITY;
+    if (window.scrollY > previousScrollY && window.scrollY >= workTrigger && !tipShown) {
+      tipShown = true;
+      projectTip.classList.add('show');
+      clearTimeout(tipTimer);
+      tipTimer = setTimeout(() => projectTip.classList.remove('show'), 3000);
+    } else if (window.scrollY < workTrigger - 240) {
+      tipShown = false;
+      projectTip.classList.remove('show');
+    }
+    previousScrollY = window.scrollY;
     if (progress >= .998 && !celebrated) {
       celebrated = true;
       scrollPacman.classList.add('celebrate');
