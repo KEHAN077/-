@@ -3,6 +3,9 @@ const errorElement = document.querySelector('#load-error');
 const filterButtons = [...document.querySelectorAll('.filters button')];
 let projects = [];
 let siteContent = {};
+let currentFilter = 'all';
+let contentFingerprint = '';
+const contentChannel = 'BroadcastChannel' in window ? new BroadcastChannel('portfolio-content') : null;
 
 const REPOSITORY_RAW_ROOT = 'https://raw.githubusercontent.com/KEHAN077/-/main/';
 const CONTENT_URL = `${REPOSITORY_RAW_ROOT}data/content.json`;
@@ -36,6 +39,7 @@ function projectCard(project, index) {
 }
 
 function renderProjects(filter = 'all') {
+  currentFilter = filter;
   const visible = filter === 'all' ? projects : projects.filter((project) => project.category === filter);
   projectsElement.innerHTML = visible.length ? visible.map(projectCard).join('') : '<p class="empty-state">这个分类还没有作品。</p>';
 }
@@ -74,18 +78,39 @@ function applySiteContent(data) {
   document.querySelectorAll('.capability-grid > div').forEach((item, index) => { const value = capabilities[index]; if (!value) return; setText.call(null, `.capability-grid > div:nth-child(${index + 1}) strong`, value.title, ''); setText.call(null, `.capability-grid > div:nth-child(${index + 1}) small`, value.code, ''); });
   const processSteps = Array.isArray(site.processSteps) ? site.processSteps : [];
   document.querySelectorAll('.process-list li').forEach((item, index) => { const value = processSteps[index]; if (!value) return; item.querySelector('b').textContent = value.title || ''; item.querySelector('small').textContent = value.code || ''; });
+  const profileImage = document.querySelector('[data-profile-image]');
+  const chip = document.querySelector('[data-chip]');
+  const profileImageUrl = safeUrl(liveMediaUrl(site.profileImage || ''));
+  if (profileImage && site.profileImage && profileImageUrl !== '#') {
+    profileImage.src = profileImageUrl;
+    profileImage.alt = site.profileImageAlt || `${site.name || 'KEHAN'} 的头像`;
+    profileImage.hidden = false;
+    if (chip) chip.hidden = true;
+  } else {
+    if (profileImage) { profileImage.hidden = true; profileImage.removeAttribute('src'); }
+    if (chip) chip.hidden = false;
+  }
   document.querySelector('[data-year]').textContent = new Date().getFullYear();
   document.querySelectorAll('[data-email-link]').forEach((link) => { link.href = `mailto:${site.email || ''}`; });
   const emailText = document.querySelector('[data-email]'); if (emailText) emailText.textContent = site.email || '';
   document.querySelector('#social-links').innerHTML = (site.socials || []).map((item) => `<a href="${escapeHtml(safeUrl(item.url))}" target="_blank" rel="noreferrer">${escapeHtml(item.label)}</a>`).join('');
   projects = Array.isArray(data.projects) ? data.projects.filter((project) => project.published !== false) : [];
   document.querySelector('[data-project-count]').textContent = `(${String(projects.length).padStart(2, '0')})`;
-  renderProjects();
+  renderProjects(currentFilter);
 }
 
 filterButtons.forEach((button) => button.addEventListener('click', () => { filterButtons.forEach((item) => item.classList.toggle('active', item === button)); renderProjects(button.dataset.filter); }));
 
 async function loadContent() {
+  const urls = [`${CONTENT_URL}?v=${Date.now()}`, `data/content.json?v=${Date.now()}`];
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, { cache: 'no-store' });
+      if (response.ok) return await response.json();
+    } catch (error) {
+      // Try the next public source.
+    }
+  }
   try {
     const apiResponse = await fetch(`${CONTENT_API_URL}&v=${Date.now()}`, {
       cache: 'no-store',
@@ -96,18 +121,29 @@ async function loadContent() {
       if (file.content) return JSON.parse(base64ToUtf8(file.content));
     }
   } catch (error) {
-    // Continue with public raw and Pages fallbacks.
-  }
-  const urls = [`${CONTENT_URL}?v=${Date.now()}`, `data/content.json?v=${Date.now()}`];
-  for (const url of urls) {
-    try {
-      const response = await fetch(url, { cache: 'no-store' });
-      if (response.ok) return await response.json();
-    } catch (error) {
-      // Try the bundled Pages copy when GitHub's raw endpoint is unavailable.
-    }
+    // All content sources are temporarily unavailable.
   }
   throw new Error('Content unavailable');
 }
 
-loadContent().then(applySiteContent).catch(() => { errorElement.hidden = false; });
+async function refreshContent() {
+  if (document.visibilityState === 'hidden') return;
+  try {
+    const data = await loadContent();
+    const nextFingerprint = JSON.stringify(data);
+    if (nextFingerprint !== contentFingerprint) {
+      contentFingerprint = nextFingerprint;
+      applySiteContent(data);
+    }
+    errorElement.hidden = true;
+  } catch (error) {
+    if (!contentFingerprint) errorElement.hidden = false;
+  }
+}
+
+refreshContent();
+setInterval(refreshContent, 5000);
+window.addEventListener('focus', refreshContent);
+window.addEventListener('storage', (event) => { if (event.key === 'portfolio-content-updated') refreshContent(); });
+if (contentChannel) contentChannel.addEventListener('message', refreshContent);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshContent(); });
