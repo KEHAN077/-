@@ -124,6 +124,8 @@ function renderProjectEditor() {
   <div class="field-row"><label>分类<select data-field="category"><option value="brand">产品硬件</option><option value="digital">嵌入式</option><option value="editorial">研发记录</option></select></label><label>英文类别<input data-field="label" value="${escapeHtml(project.label || '')}" /></label></div>
   <div class="field-row"><label>版式<select data-field="layout"><option value="normal">标准</option><option value="large">通栏大图</option><option value="wide">右侧宽图</option></select></label><label>点击跳转链接 <small>可留空；支持 https://…、mailto:… 或 #页面区域</small><input data-field="link" placeholder="https://example.com/project" value="${escapeHtml(project.link || '')}" /></label></div>
   <label>图片说明（无障碍文本）<input data-field="alt" value="${escapeHtml(project.alt || '')}" /></label>
+  <div class="hover-media-box"><div><strong>鼠标悬浮补充图片</strong><p class="muted">最多两张。留空时会自动使用主图作为一张侧边预览；手机端不会显示。</p></div><button id="upload-hover-media" type="button" class="button secondary">上传 1–2 张图片</button></div>
+  <div class="field-row"><label>补充图片 1<input data-hover-image="0" value="${escapeHtml((project.hoverImages || [])[0] || '')}" placeholder="media/… 或 https://…" /></label><label>补充图片 2<input data-hover-image="1" value="${escapeHtml((project.hoverImages || [])[1] || '')}" placeholder="media/… 或 https://…" /></label></div>
   <div class="editor-footer"><button id="delete-project" class="button danger">删除作品</button><span class="muted">修改后点击页面右上角“保存并发布”</span></div>`;
   $('[data-field="category"]').value = project.category || 'editorial'; $('[data-field="layout"]').value = project.layout || 'normal';
   document.querySelectorAll('[data-field]').forEach((input) => input.addEventListener('input', () => {
@@ -131,7 +133,14 @@ function renderProjectEditor() {
     if (input.dataset.field === 'media') project.mediaType = /\.(mp4|webm)(\?|$)/i.test(value) ? 'video' : 'image';
     markDirty(); if (['title', 'year', 'category', 'published'].includes(input.dataset.field)) renderList();
   }));
+  document.querySelectorAll('[data-hover-image]').forEach((input) => input.addEventListener('input', () => {
+    const images = Array.isArray(project.hoverImages) ? [...project.hoverImages] : [];
+    images[Number(input.dataset.hoverImage)] = input.value.trim();
+    project.hoverImages = images.slice(0, 2);
+    markDirty();
+  }));
   $('#upload-media').addEventListener('click', () => $('#media-file').click());
+  $('#upload-hover-media').addEventListener('click', () => $('#hover-media-file').click());
   $('#delete-project').addEventListener('click', () => {
     if (!confirm(`确定删除“${project.title || '未命名作品'}”吗？媒体文件不会自动删除。`)) return;
     state.content.projects = state.content.projects.filter((item) => item.id !== project.id); state.selectedId = null; markDirty(); renderList();
@@ -151,6 +160,27 @@ async function uploadMedia(file) {
   const uploaded = await github(apiPath(path), { method: 'PUT', body: JSON.stringify({ message: `Upload ${cleanName}`, content, branch: state.branch }) });
   if (!uploaded.content?.path) throw new Error('GitHub 没有返回上传后的文件路径，请重试。');
   const project = selectedProject(); project.media = uploaded.content.path; project.mediaType = file.type.startsWith('video/') ? 'video' : 'image'; markDirty(); renderList(); renderProjectEditor(); setStatus('媒体上传成功，请点击“保存并发布”完成作品更新', 'success');
+}
+
+async function uploadHoverMedia(files) {
+  const selectedFiles = [...(files || [])].slice(0, 2);
+  const project = selectedProject();
+  if (!selectedFiles.length || !project) return;
+  if (selectedFiles.some((file) => !/^image\/(jpeg|png|webp|gif)$/i.test(file.type))) throw new Error('补充图片仅支持 JPG、PNG、WebP 或 GIF。');
+  if (selectedFiles.some((file) => file.size > 15 * 1024 * 1024)) throw new Error('每张补充图片不能超过 15 MB。');
+  const button = $('#upload-hover-media'); button.disabled = true; button.textContent = '正在上传…'; setStatus('正在上传悬浮补充图片，请勿关闭页面');
+  const uploadedPaths = [];
+  for (const file of selectedFiles) {
+    const extension = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const cleanStem = file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'preview';
+    const path = `media/${Date.now()}-${cleanStem}.${extension || 'jpg'}`;
+    const content = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
+    const uploaded = await github(apiPath(path), { method: 'PUT', body: JSON.stringify({ message: `Upload hover preview ${cleanStem}`, content, branch: state.branch }) });
+    if (!uploaded.content?.path) throw new Error('GitHub 没有返回补充图片路径，请重试。');
+    uploadedPaths.push(uploaded.content.path);
+  }
+  project.hoverImages = uploadedPaths;
+  markDirty(); renderProjectEditor(); setStatus('补充图片上传成功，请点击“保存并发布”', 'success');
 }
 
 async function uploadAvatar(file) {
@@ -200,12 +230,13 @@ $('#login-form').addEventListener('submit', async (event) => {
   try { await connect(event.currentTarget.elements); } catch (error) { alert(`连接失败：${error.message}\n\n请检查仓库名、分支和 token 权限。`); } finally { button.disabled = false; button.textContent = '连接并进入后台'; }
 });
 $('#add-project').addEventListener('click', () => {
-  const project = { id: `project-${Date.now()}`, title: '新作品', description: '', category: 'editorial', label: 'PROJECT', year: String(new Date().getFullYear()), mediaType: 'image', media: '', alt: '', link: '', layout: 'normal', published: false };
+  const project = { id: `project-${Date.now()}`, title: '新作品', description: '', category: 'editorial', label: 'PROJECT', year: String(new Date().getFullYear()), mediaType: 'image', media: '', hoverImages: [], alt: '', link: '', layout: 'normal', published: false };
   state.content.projects.unshift(project); state.selectedId = project.id; markDirty(); renderList(); renderProjectEditor();
 });
 $('#upload-avatar').addEventListener('click', () => $('#avatar-file').click());
 $('#avatar-file').addEventListener('change', async (event) => { try { await uploadAvatar(event.target.files[0]); } catch (error) { setStatus(error.message, 'error'); alert(`头像上传失败：${error.message}`); const button = $('#upload-avatar'); button.disabled = false; button.textContent = '上传头像图片'; } event.target.value = ''; });
 $('#media-file').addEventListener('change', async (event) => { try { await uploadMedia(event.target.files[0]); } catch (error) { setStatus(error.message, 'error'); alert(`上传失败：${error.message}`); const button = $('#upload-media'); if (button) { button.disabled = false; button.textContent = '上传图片或视频'; } } event.target.value = ''; });
+$('#hover-media-file').addEventListener('change', async (event) => { try { await uploadHoverMedia(event.target.files); } catch (error) { setStatus(error.message, 'error'); alert(`补充图片上传失败：${error.message}`); const button = $('#upload-hover-media'); if (button) { button.disabled = false; button.textContent = '上传 1–2 张图片'; } } event.target.value = ''; });
 $('#save-all').addEventListener('click', saveAll);
 $('#logout').addEventListener('click', () => { sessionStorage.removeItem('portfolio-token'); location.reload(); });
 window.addEventListener('beforeunload', (event) => { if (state.dirty) { event.preventDefault(); event.returnValue = ''; } });
