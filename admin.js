@@ -7,6 +7,15 @@ const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => (
 const utf8ToBase64 = (text) => { const bytes = new TextEncoder().encode(text); let binary = ''; bytes.forEach((byte) => { binary += String.fromCharCode(byte); }); return btoa(binary); };
 const base64ToUtf8 = (base64) => { const binary = atob(base64.replace(/\n/g, '')); const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0)); return new TextDecoder().decode(bytes); };
 const apiPath = (path) => `https://api.github.com/repos/${encodeURIComponent(state.owner)}/${encodeURIComponent(state.repo)}/contents/${path}`;
+const DEFAULT_SITE = {
+  brandPrimary: 'KH', brandSecondary: '//HW', navWork: '项目', navAbout: '方法', navContact: '联系', navStatus: 'HARDWARE ENGINEER',
+  heroCta: '查看项目', profileLabel: 'PROFILE_01', profileStatus: 'ONLINE', chipMark: 'KH', revision: 'REV.26',
+  roleLabel: 'ROLE', role: 'HARDWARE ENGINEER', workflowLabel: 'WORKFLOW', workflow: 'BUILD / TEST / ITERATE', outputLabel: 'OUTPUT', output: 'WORKING PROTOTYPES',
+  projectsEyebrow: 'ENGINEERING LOG', projectsTitle: '项目记录', filterAll: '全部', filterBrand: '产品硬件', filterDigital: '嵌入式', filterEditorial: '研发记录', projectLinkLabel: 'VIEW PROJECT ↗',
+  aboutEyebrow: 'HOW I WORK', aboutCode: 'SYS / 04', contactEyebrow: 'START A PROJECT', contactStatus: 'AVAILABLE / 2026', contactTitle: '有个硬件想法？', contactCta: '一起把它做出来。',
+  capabilities: [{ title: '电路与硬件', code: 'CIRCUIT' }, { title: '快速原型', code: 'PROTOTYPE' }, { title: '测试调试', code: 'DEBUG' }, { title: '持续迭代', code: 'ITERATE' }],
+  processSteps: [{ title: '定义问题', code: 'DEFINE' }, { title: '搭建原型', code: 'BUILD' }, { title: '测试验证', code: 'TEST' }, { title: '迭代交付', code: 'ITERATE' }]
+};
 
 async function github(path, options = {}) {
   let response;
@@ -48,7 +57,7 @@ function selectedProject() { return state.content.projects.find((project) => pro
 async function connect(form) {
   state.owner = form.owner.value.trim(); state.repo = form.repo.value.trim(); state.branch = form.branch.value.trim(); state.token = form.token.value.trim();
   const file = await github(`${apiPath('data/content.json')}?ref=${encodeURIComponent(state.branch)}`);
-  state.content = JSON.parse(base64ToUtf8(file.content)); state.contentSha = file.sha;
+  state.content = JSON.parse(base64ToUtf8(file.content)); state.content.site = { ...DEFAULT_SITE, ...(state.content.site || {}) }; state.contentSha = file.sha;
   localStorage.setItem('portfolio-repo', JSON.stringify({ owner: state.owner, repo: state.repo, branch: state.branch }));
   sessionStorage.setItem('portfolio-token', state.token);
   loginView.hidden = true; editorView.hidden = false; $('#logout').hidden = false;
@@ -65,6 +74,16 @@ function fillSiteForm() {
     state.content.site.socials = $('#socials').value.split('\n').map((line) => { const [label, ...url] = line.split('|'); return { label: label.trim(), url: url.join('|').trim() }; }).filter((item) => item.label && item.url);
     markDirty();
   });
+  const bindPairList = (selector, key) => {
+    const input = $(selector);
+    input.value = (state.content.site[key] || []).map((item) => `${item.title} | ${item.code}`).join('\n');
+    input.addEventListener('input', () => {
+      state.content.site[key] = input.value.split('\n').map((line) => { const [title, ...code] = line.split('|'); return { title: title.trim(), code: code.join('|').trim() }; }).filter((item) => item.title || item.code).slice(0, 4);
+      markDirty();
+    });
+  };
+  bindPairList('#capabilities', 'capabilities');
+  bindPairList('#process-steps', 'processSteps');
 }
 
 function renderList() {
@@ -90,8 +109,8 @@ function renderProjectEditor() {
   <div class="media-box"><div>${project.mediaType === 'video' ? `<video class="media-preview" src="${escapeHtml(project.media)}" muted controls></video>` : project.media ? `<img class="media-preview" src="${escapeHtml(project.media)}" alt="" />` : '<span class="media-preview"></span>'}</div><div class="media-actions"><button id="upload-media" class="button secondary">上传图片或视频</button><p>支持 JPG、PNG、WebP、GIF、MP4、WebM，单个文件不超过 45 MB。</p><label>或填写媒体网址<input data-field="media" value="${escapeHtml(project.media || '')}" /></label></div></div>
   <div class="field-row"><label>作品标题<input data-field="title" value="${escapeHtml(project.title || '')}" /></label><label>年份<input data-field="year" value="${escapeHtml(project.year || '')}" /></label></div>
   <label>作品简介<textarea data-field="description" rows="3">${escapeHtml(project.description || '')}</textarea></label>
-  <div class="field-row"><label>分类<select data-field="category"><option value="brand">品牌</option><option value="digital">数字产品</option><option value="editorial">视觉</option></select></label><label>英文类别<input data-field="label" value="${escapeHtml(project.label || '')}" /></label></div>
-  <div class="field-row"><label>版式<select data-field="layout"><option value="normal">标准</option><option value="large">通栏大图</option><option value="wide">右侧宽图</option></select></label><label>点击跳转链接<input data-field="link" value="${escapeHtml(project.link || '#contact')}" /></label></div>
+  <div class="field-row"><label>分类<select data-field="category"><option value="brand">产品硬件</option><option value="digital">嵌入式</option><option value="editorial">研发记录</option></select></label><label>英文类别<input data-field="label" value="${escapeHtml(project.label || '')}" /></label></div>
+  <div class="field-row"><label>版式<select data-field="layout"><option value="normal">标准</option><option value="large">通栏大图</option><option value="wide">右侧宽图</option></select></label><label>点击跳转链接 <small>可留空；支持 https://…、mailto:… 或 #页面区域</small><input data-field="link" placeholder="https://example.com/project" value="${escapeHtml(project.link || '')}" /></label></div>
   <label>图片说明（无障碍文本）<input data-field="alt" value="${escapeHtml(project.alt || '')}" /></label>
   <div class="editor-footer"><button id="delete-project" class="button danger">删除作品</button><span class="muted">修改后点击页面右上角“保存并发布”</span></div>`;
   $('[data-field="category"]').value = project.category || 'editorial'; $('[data-field="layout"]').value = project.layout || 'normal';
@@ -147,7 +166,7 @@ $('#login-form').addEventListener('submit', async (event) => {
   try { await connect(event.currentTarget.elements); } catch (error) { alert(`连接失败：${error.message}\n\n请检查仓库名、分支和 token 权限。`); } finally { button.disabled = false; button.textContent = '连接并进入后台'; }
 });
 $('#add-project').addEventListener('click', () => {
-  const project = { id: `project-${Date.now()}`, title: '新作品', description: '', category: 'editorial', label: 'PROJECT', year: String(new Date().getFullYear()), mediaType: 'image', media: '', alt: '', link: '#contact', layout: 'normal', published: false };
+  const project = { id: `project-${Date.now()}`, title: '新作品', description: '', category: 'editorial', label: 'PROJECT', year: String(new Date().getFullYear()), mediaType: 'image', media: '', alt: '', link: '', layout: 'normal', published: false };
   state.content.projects.unshift(project); state.selectedId = project.id; markDirty(); renderList(); renderProjectEditor();
 });
 $('#media-file').addEventListener('change', async (event) => { try { await uploadMedia(event.target.files[0]); } catch (error) { setStatus(error.message, 'error'); alert(`上传失败：${error.message}`); const button = $('#upload-media'); if (button) { button.disabled = false; button.textContent = '上传图片或视频'; } } event.target.value = ''; });
