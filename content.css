@@ -11,15 +11,24 @@
 .contact h2>span,.contact h2 a>span{font:inherit;vertical-align:baseline}
 .contact h2 a>b{font:44px "DM Mono",monospace;font-weight:400;vertical-align:top}
 
-.engineer-card{padding:28px;gap:22px}
-.profile-portrait{position:relative;z-index:1;width:min(74%,240px);aspect-ratio:1;margin:auto;display:grid;place-items:center;overflow:hidden;border:1px solid #4a5048;background:#1a1d19}
+.engineer-card{isolation:isolate;padding:28px;gap:22px;background:radial-gradient(circle at 12% 10%,rgba(29,255,205,.5),transparent 30%),radial-gradient(circle at 92% 18%,rgba(159,77,255,.68),transparent 35%),radial-gradient(circle at 72% 92%,rgba(44,89,255,.82),transparent 42%),linear-gradient(145deg,#071c2d 8%,#1b1240 52%,#07152c 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13),0 22px 55px rgba(49,87,255,.2)}
+.engineer-card:before{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.065) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.065) 1px,transparent 1px);background-size:46px 46px;opacity:.55;mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.65) 48%,transparent 100%)}
+.engineer-card:after{content:"";position:absolute;z-index:0;width:210px;height:210px;right:-86px;bottom:90px;border-radius:50%;pointer-events:none;background:rgba(70,238,255,.2);filter:blur(16px)}
+.engineer-card .card-top{z-index:1;padding:11px 13px;border:1px solid rgba(255,255,255,.14);background:rgba(5,10,31,.28);backdrop-filter:blur(12px);color:rgba(255,255,255,.72)}
+.engineer-card .online{color:#7effe5}
+.engineer-card .online i{background:#7effe5;box-shadow:0 0 0 4px rgba(126,255,229,.17),0 0 18px rgba(126,255,229,.8)}
+.profile-portrait{position:relative;z-index:1;width:min(74%,240px);aspect-ratio:1;margin:auto;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.45);background:rgba(8,14,35,.45);box-shadow:0 18px 48px rgba(4,8,30,.34),0 0 0 7px rgba(255,255,255,.055);backdrop-filter:blur(8px)}
 .profile-portrait>span{position:relative;width:54%;height:54%;border-radius:50%;background:#343934}
 .profile-portrait>span:after{content:"";position:absolute;left:-28%;right:-28%;bottom:-62%;height:72%;border-radius:50% 50% 0 0;background:#343934}
 .profile-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;filter:saturate(.88) contrast(1.03)}
 .profile-image[hidden]{display:none}
 .profile-image:not([hidden])+span{display:none}
-.profile-role{position:relative;z-index:1;margin:0;text-align:center;color:#eef1e9;font:500 var(--font-card,13px) "DM Mono",monospace;letter-spacing:.04em}
-.engineer-card dl{margin-top:0}
+.profile-role{position:relative;z-index:1;align-self:center;margin:-5px 0 0;padding:8px 13px;text-align:center;color:#f6fbff;font:500 var(--font-card,13px) "DM Mono",monospace;letter-spacing:.04em;border:1px solid rgba(255,255,255,.15);background:rgba(10,13,40,.28);backdrop-filter:blur(10px)}
+.engineer-card dl{z-index:1;margin-top:0;padding:0 13px;border:1px solid rgba(255,255,255,.14);background:rgba(5,10,31,.25);backdrop-filter:blur(12px)}
+.engineer-card dl div{border-top-color:rgba(255,255,255,.15)}
+.engineer-card dl div:first-child{border-top:0}
+.engineer-card dt{color:rgba(218,230,255,.64)}
+.engineer-card dd{color:#fff}
 
 .nav nav a{font-size:var(--font-nav,13px)}
 h1{font-size:var(--font-hero,clamp(58px,8vw,118px))}
