@@ -12,7 +12,7 @@
     "chipMark": "KH",
     "revision": "REV.26",
     "roleLabel": "ROLE",
-    "role": "HARDWARE ENGINEER",
+    "role": "硬件工程师",
     "workflowLabel": "WORKFLOW",
     "workflow": "BUILD / TEST / ITERATE",
     "outputLabel": "OUTPUT",
@@ -187,5 +187,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-04T05:57:50.417Z"
+  "updatedAt": "2026-08-04T05:59:35.689Z"
 }
