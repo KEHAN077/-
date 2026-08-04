@@ -42,9 +42,10 @@ function projectCard(project, index) {
   const hoverImageSizes = Array.isArray(project.hoverImageSizes) ? project.hoverImageSizes : [];
   const preparedHoverImages = hoverImages.map((item) => ({ ...item, width: previewDimension(hoverImageSizes[item.sourceIndex]?.width, 140, 480, 260), height: previewDimension(hoverImageSizes[item.sourceIndex]?.height, 100, 360, 185) }));
   const hoverGalleryWidth = preparedHoverImages.reduce((largest, item) => Math.max(largest, item.width), 260);
+  const previewTextOffset = Math.min(150, Math.max(58, Math.round(hoverGalleryWidth * .4)));
   const hoverGallery = preparedHoverImages.length ? `<div class="project-hover-gallery" aria-hidden="true" style="--preview-gallery-width:${hoverGalleryWidth}px">${preparedHoverImages.map((item, previewIndex) => `<img src="${escapeHtml(safeUrl(liveMediaUrl(item.image)))}" alt="" loading="lazy" data-preview="${previewIndex + 1}" style="--preview-width:${item.width}px;--preview-height:${item.height}px" />`).join('')}</div>` : '';
   const previewSide = index % 2 === 0 ? ' project-preview-left' : ' project-preview-right';
-  return `<article class="project${layout}${previewSide}${link ? '' : ' project-no-link'}" data-category="${escapeHtml(project.category || 'editorial')}"><${tag} class="project-card"${attributes}>${hoverGallery}<div class="project-image" data-link-label="${escapeHtml(linkLabel)}">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</${tag}></article>`;
+  return `<article class="project${layout}${previewSide}${link ? '' : ' project-no-link'}" data-category="${escapeHtml(project.category || 'editorial')}" style="--preview-gallery-width:${hoverGalleryWidth}px;--preview-text-offset:${previewTextOffset}px"><${tag} class="project-card"${attributes}>${hoverGallery}<div class="project-image" data-link-label="${escapeHtml(linkLabel)}">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</${tag}></article>`;
 }
 
 function renderProjects(filter = 'all') {
@@ -183,3 +184,26 @@ window.addEventListener('focus', () => refreshContent(true));
 window.addEventListener('storage', (event) => { if (event.key === 'portfolio-latest-content' && event.newValue) { try { acceptContent(JSON.parse(event.newValue)); } catch (error) { refreshContent(true); } } });
 if (contentChannel) contentChannel.addEventListener('message', (event) => { if (event.data?.content) acceptContent(event.data.content); else refreshContent(true); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshContent(true); });
+
+const scrollPacman = document.querySelector('.scroll-pacman');
+if (scrollPacman) {
+  const pacman = scrollPacman.querySelector('.pixel-pacman');
+  const dots = [...scrollPacman.querySelectorAll('.scroll-dot')];
+  let scrollFrame = 0;
+  let stopTimer = 0;
+  const updateScrollPacman = () => {
+    scrollFrame = 0;
+    const maximum = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const progress = Math.min(1, Math.max(0, window.scrollY / maximum));
+    const travel = Math.max(0, scrollPacman.clientHeight - 28);
+    pacman.style.transform = `translateY(${Math.round(travel * progress)}px)`;
+    dots.forEach((dot, index) => dot.classList.toggle('eaten', index / Math.max(1, dots.length - 1) <= progress));
+    scrollPacman.classList.add('is-scrolling');
+    clearTimeout(stopTimer);
+    stopTimer = setTimeout(() => scrollPacman.classList.remove('is-scrolling'), 180);
+  };
+  const requestPacmanUpdate = () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollPacman); };
+  window.addEventListener('scroll', requestPacmanUpdate, { passive: true });
+  window.addEventListener('resize', requestPacmanUpdate);
+  updateScrollPacman();
+}
