@@ -126,6 +126,8 @@ function renderProjectEditor() {
   <label>图片说明（无障碍文本）<input data-field="alt" value="${escapeHtml(project.alt || '')}" /></label>
   <div class="hover-media-box"><div><strong>鼠标悬浮补充图片</strong><p class="muted">最多两张。留空时会自动使用主图作为一张侧边预览；手机端不会显示。</p></div><button id="upload-hover-media" type="button" class="button secondary">上传 1–2 张图片</button></div>
   <div class="field-row"><label>补充图片 1<input data-hover-image="0" value="${escapeHtml((project.hoverImages || [])[0] || '')}" placeholder="media/… 或 https://…" /></label><label>补充图片 2<input data-hover-image="1" value="${escapeHtml((project.hoverImages || [])[1] || '')}" placeholder="media/… 或 https://…" /></label></div>
+  <div class="field-row"><label>图片 1 宽度（140–480 px）<input data-hover-size-index="0" data-hover-size-key="width" type="number" min="140" max="480" value="${escapeHtml((project.hoverImageSizes || [])[0]?.width || 260)}" /></label><label>图片 1 高度（100–360 px）<input data-hover-size-index="0" data-hover-size-key="height" type="number" min="100" max="360" value="${escapeHtml((project.hoverImageSizes || [])[0]?.height || 185)}" /></label></div>
+  <div class="field-row"><label>图片 2 宽度（140–480 px）<input data-hover-size-index="1" data-hover-size-key="width" type="number" min="140" max="480" value="${escapeHtml((project.hoverImageSizes || [])[1]?.width || 260)}" /></label><label>图片 2 高度（100–360 px）<input data-hover-size-index="1" data-hover-size-key="height" type="number" min="100" max="360" value="${escapeHtml((project.hoverImageSizes || [])[1]?.height || 185)}" /></label></div>
   <div class="editor-footer"><button id="delete-project" class="button danger">删除作品</button><span class="muted">修改后点击页面右上角“保存并发布”</span></div>`;
   $('[data-field="category"]').value = project.category || 'editorial'; $('[data-field="layout"]').value = project.layout || 'normal';
   document.querySelectorAll('[data-field]').forEach((input) => input.addEventListener('input', () => {
@@ -137,6 +139,13 @@ function renderProjectEditor() {
     const images = Array.isArray(project.hoverImages) ? [...project.hoverImages] : [];
     images[Number(input.dataset.hoverImage)] = input.value.trim();
     project.hoverImages = images.slice(0, 2);
+    markDirty();
+  }));
+  document.querySelectorAll('[data-hover-size-key]').forEach((input) => input.addEventListener('input', () => {
+    const sizes = Array.isArray(project.hoverImageSizes) ? project.hoverImageSizes.map((item) => ({ ...(item || {}) })) : [];
+    const index = Number(input.dataset.hoverSizeIndex);
+    sizes[index] = { ...(sizes[index] || {}), [input.dataset.hoverSizeKey]: input.value };
+    project.hoverImageSizes = sizes.slice(0, 2);
     markDirty();
   }));
   $('#upload-media').addEventListener('click', () => $('#media-file').click());
@@ -230,7 +239,7 @@ $('#login-form').addEventListener('submit', async (event) => {
   try { await connect(event.currentTarget.elements); } catch (error) { alert(`连接失败：${error.message}\n\n请检查仓库名、分支和 token 权限。`); } finally { button.disabled = false; button.textContent = '连接并进入后台'; }
 });
 $('#add-project').addEventListener('click', () => {
-  const project = { id: `project-${Date.now()}`, title: '新作品', description: '', category: 'editorial', label: 'PROJECT', year: String(new Date().getFullYear()), mediaType: 'image', media: '', hoverImages: [], alt: '', link: '', layout: 'normal', published: false };
+  const project = { id: `project-${Date.now()}`, title: '新作品', description: '', category: 'editorial', label: 'PROJECT', year: String(new Date().getFullYear()), mediaType: 'image', media: '', hoverImages: [], hoverImageSizes: [{ width: 260, height: 185 }, { width: 260, height: 185 }], alt: '', link: '', layout: 'normal', published: false };
   state.content.projects.unshift(project); state.selectedId = project.id; markDirty(); renderList(); renderProjectEditor();
 });
 $('#upload-avatar').addEventListener('click', () => $('#avatar-file').click());
