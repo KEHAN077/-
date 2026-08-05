@@ -142,7 +142,13 @@
       "alt": "手机应用界面设计",
       "link": "https://www.bilibili.com/video/BV1ug326GEuj/?spm_id_from=333.1365.list.card_archive.click&vd_source=8606a362b53a31471ea01f09065b7a5b",
       "layout": "normal",
-      "published": true
+      "published": true,
+      "hoverImageSizes": [
+        {
+          "width": "480",
+          "height": "360"
+        }
+      ]
     },
     {
       "id": "magazine",
@@ -255,5 +261,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-05T08:02:14.598Z"
+  "updatedAt": "2026-08-05T08:02:57.925Z"
 }
