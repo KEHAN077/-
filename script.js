@@ -22,14 +22,22 @@ const base64ToUtf8 = (base64) => {
 const liveMediaUrl = (value = '') => {
   const url = String(value).trim();
   const repositoryPath = url.replace(/^\.\//, '');
-  return repositoryPath.startsWith('media/') ? `${REPOSITORY_RAW_ROOT}${repositoryPath}` : url;
+  return repositoryPath.startsWith('media/') ? repositoryPath : url;
+};
+const fallbackMediaUrl = (value = '') => {
+  const repositoryPath = String(value).trim().replace(/^\.\//, '');
+  return repositoryPath.startsWith('media/') ? `${REPOSITORY_RAW_ROOT}${repositoryPath}` : '';
+};
+const fallbackAttribute = (value = '') => {
+  const fallback = fallbackMediaUrl(value);
+  return fallback ? ` data-fallback-src="${escapeHtml(safeUrl(fallback))}"` : '';
 };
 
 function projectCard(project, index) {
   const layout = ['large', 'wide'].includes(project.layout) ? ` project-${project.layout}` : '';
   const media = project.mediaType === 'video'
-    ? `<video src="${escapeHtml(safeUrl(liveMediaUrl(project.media)))}" ${project.poster ? `poster="${escapeHtml(safeUrl(liveMediaUrl(project.poster)))}"` : ''} muted loop playsinline controls preload="metadata"></video>`
-    : `<img src="${escapeHtml(safeUrl(liveMediaUrl(project.media)))}" alt="${escapeHtml(project.alt || project.title)}" loading="lazy" />`;
+    ? `<video src="${escapeHtml(safeUrl(liveMediaUrl(project.media)))}"${fallbackAttribute(project.media)} ${project.poster ? `poster="${escapeHtml(safeUrl(liveMediaUrl(project.poster)))}"` : ''} muted loop playsinline controls preload="none"></video>`
+    : `<img src="${escapeHtml(safeUrl(liveMediaUrl(project.media)))}"${fallbackAttribute(project.media)} alt="${escapeHtml(project.alt || project.title)}" loading="lazy" decoding="async" />`;
   const number = String(index + 1).padStart(2, '0');
   const rawLink = String(project.link || '').trim();
   const link = rawLink && rawLink !== '#' ? safeUrl(rawLink) : '';
@@ -43,7 +51,7 @@ function projectCard(project, index) {
   const preparedHoverImages = hoverImages.map((item) => ({ ...item, width: previewDimension(hoverImageSizes[item.sourceIndex]?.width, 140, 480, 260), height: previewDimension(hoverImageSizes[item.sourceIndex]?.height, 100, 360, 185) }));
   const hoverGalleryWidth = preparedHoverImages.reduce((largest, item) => Math.max(largest, item.width), 260);
   const previewTextOffset = Math.min(150, Math.max(58, Math.round(hoverGalleryWidth * .4)));
-  const hoverGallery = preparedHoverImages.length ? `<div class="project-hover-gallery" aria-hidden="true" style="--preview-gallery-width:${hoverGalleryWidth}px">${preparedHoverImages.map((item, previewIndex) => `<img src="${escapeHtml(safeUrl(liveMediaUrl(item.image)))}" alt="" loading="lazy" data-preview="${previewIndex + 1}" style="--preview-width:${item.width}px;--preview-height:${item.height}px" />`).join('')}</div>` : '';
+  const hoverGallery = preparedHoverImages.length ? `<div class="project-hover-gallery" aria-hidden="true" style="--preview-gallery-width:${hoverGalleryWidth}px">${preparedHoverImages.map((item, previewIndex) => `<img src="${escapeHtml(safeUrl(liveMediaUrl(item.image)))}"${fallbackAttribute(item.image)} alt="" loading="lazy" decoding="async" data-preview="${previewIndex + 1}" style="--preview-width:${item.width}px;--preview-height:${item.height}px" />`).join('')}</div>` : '';
   const previewSide = index % 2 === 0 ? ' project-preview-left' : ' project-preview-right';
   return `<article class="project${layout}${previewSide}${link ? '' : ' project-no-link'}" data-category="${escapeHtml(project.category || 'editorial')}" style="--preview-gallery-width:${hoverGalleryWidth}px;--preview-text-offset:${previewTextOffset}px"><${tag} class="project-card"${attributes}>${hoverGallery}<div class="project-image" data-link-label="${escapeHtml(linkLabel)}">${media}</div><div class="project-meta"><span>${number} / ${escapeHtml(project.label || 'PROJECT')}</span><span>${escapeHtml(project.year || '')}</span></div><h3>${escapeHtml(project.title || '未命名作品')}</h3>${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}</${tag}></article>`;
 }
@@ -52,6 +60,10 @@ function renderProjects(filter = 'all') {
   currentFilter = filter;
   const visible = filter === 'all' ? projects : projects.filter((project) => project.category === filter);
   projectsElement.innerHTML = visible.length ? visible.map(projectCard).join('') : '<p class="empty-state">这个分类还没有作品。</p>';
+  projectsElement.querySelectorAll('[data-fallback-src]').forEach((media) => media.addEventListener('error', () => {
+    const fallback = media.dataset.fallbackSrc;
+    if (fallback && media.getAttribute('src') !== fallback) media.setAttribute('src', fallback);
+  }, { once: true }));
 }
 
 function safeRichText(value) {
@@ -92,6 +104,11 @@ function applySiteContent(data) {
   const profileImageUrl = safeUrl(liveMediaUrl(site.profileImage || ''));
   if (profileImage && site.profileImage && profileImageUrl !== '#') {
     profileImage.src = profileImageUrl;
+    profileImage.dataset.fallbackSrc = fallbackMediaUrl(site.profileImage);
+    profileImage.onerror = () => {
+      const fallback = profileImage.dataset.fallbackSrc;
+      if (fallback && profileImage.getAttribute('src') !== fallback) profileImage.src = fallback;
+    };
     profileImage.alt = site.profileImageAlt || `${site.name || 'KEHAN'} 的头像`;
     profileImage.hidden = false;
   } else {
@@ -139,7 +156,7 @@ async function loadContent(forceFresh = false) {
     const apiContent = await fetchApiContent();
     if (apiContent) return apiContent;
   }
-  const urls = [`${CONTENT_URL}?v=${Date.now()}`, `data/content.json?v=${Date.now()}`];
+  const urls = [`data/content.json?v=${Date.now()}`, `${CONTENT_URL}?v=${Date.now()}`];
   for (const url of urls) {
     try {
       const response = await fetch(url, { cache: 'no-store' });
@@ -178,7 +195,7 @@ async function refreshContent(forceFresh = false) {
 }
 
 try { acceptContent(JSON.parse(localStorage.getItem('portfolio-latest-content') || 'null')); } catch (error) { /* Ignore invalid local cache. */ }
-refreshContent(true);
+refreshContent(false).finally(() => refreshContent(true));
 setInterval(refreshContent, 5000);
 window.addEventListener('focus', () => refreshContent(true));
 window.addEventListener('storage', (event) => { if (event.key === 'portfolio-latest-content' && event.newValue) { try { acceptContent(JSON.parse(event.newValue)); } catch (error) { refreshContent(true); } } });
