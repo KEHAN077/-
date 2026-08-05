@@ -202,6 +202,22 @@ window.addEventListener('storage', (event) => { if (event.key === 'portfolio-lat
 if (contentChannel) contentChannel.addEventListener('message', (event) => { if (event.data?.content) acceptContent(event.data.content); else refreshContent(true); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshContent(true); });
 
+const contactHeading = document.querySelector('.contact h2');
+if (contactHeading) {
+  const revealContactHeading = () => contactHeading.classList.add('is-visible');
+  if ('IntersectionObserver' in window) {
+    const contactObserver = new IntersectionObserver((entries, observer) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      revealContactHeading();
+      observer.unobserve(contactHeading);
+    }, { threshold: .25, rootMargin: '0px 0px -12% 0px' });
+    document.documentElement.classList.add('contact-motion-ready');
+    contactObserver.observe(contactHeading);
+  } else {
+    revealContactHeading();
+  }
+}
+
 const scrollPacman = document.querySelector('.scroll-pacman');
 if (scrollPacman) {
   const pacman = scrollPacman.querySelector('.pixel-pacman');
