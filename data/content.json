@@ -6,7 +6,7 @@
     "navAbout": "方法",
     "navContact": "联系",
     "navStatus": "HARDWARE ENGINEER",
-    "heroCta": "卡顿请使用魔法上网",
+    "heroCta": "如有卡顿请使用魔法上网",
     "profileLabel": "刘可晗",
     "profileStatus": "ONLINE",
     "chipMark": "KH",
@@ -237,5 +237,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-05T02:57:09.758Z"
+  "updatedAt": "2026-08-05T02:57:30.359Z"
 }
