@@ -156,7 +156,13 @@
       "alt": "杂志与桌面",
       "link": "https://oshwhub.com/irex142359/project_xlbhvypw",
       "layout": "wide",
-      "published": true
+      "published": true,
+      "hoverImageSizes": [
+        {
+          "width": "480",
+          "height": "360"
+        }
+      ]
     },
     {
       "id": "casa",
@@ -170,7 +176,13 @@
       "alt": "建筑表面与阳光",
       "link": "",
       "layout": "normal",
-      "published": true
+      "published": true,
+      "hoverImageSizes": [
+        {
+          "width": "480",
+          "height": "360"
+        }
+      ]
     },
     {
       "id": "play",
@@ -184,7 +196,13 @@
       "alt": "复古电子游戏机",
       "link": "",
       "layout": "wide",
-      "published": true
+      "published": true,
+      "hoverImageSizes": [
+        {
+          "width": "480",
+          "height": "360"
+        }
+      ]
     },
     {
       "id": "night",
@@ -223,8 +241,8 @@
       ],
       "hoverImageSizes": [
         {
-          "width": 260,
-          "height": 185
+          "width": "480",
+          "height": "360"
         },
         {
           "width": 260,
@@ -237,5 +255,5 @@
       "published": true
     }
   ],
-  "updatedAt": "2026-08-05T03:51:35.054Z"
+  "updatedAt": "2026-08-05T08:02:14.598Z"
 }
