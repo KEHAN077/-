@@ -2,36 +2,36 @@
   "site": {
     "brandPrimary": "KEHAN",
     "brandSecondary": "       LIU",
-    "navWork": "项目",
-    "navAbout": "方法",
-    "navContact": "联系",
+    "navWork": "\u9879\u76ee",
+    "navAbout": "\u65b9\u6cd5",
+    "navContact": "\u8054\u7cfb",
     "navStatus": "HARDWARE ENGINEER",
-    "heroCta": "如有卡顿请使用魔法上网",
-    "profileLabel": "刘可晗",
+    "heroCta": "\u5982\u6709\u5361\u987f\u8bf7\u4f7f\u7528\u9b54\u6cd5\u4e0a\u7f51",
+    "profileLabel": "\u5218\u53ef\u6657",
     "profileStatus": "ONLINE",
     "chipMark": "KH",
     "revision": "REV.26",
     "roleLabel": "ROLE",
-    "role": "硬件工程师",
+    "role": "\u786c\u4ef6\u5de5\u7a0b\u5e08",
     "workflowLabel": "WORKFLOW",
     "workflow": "BUILD / TEST / ITERATE",
     "outputLabel": "OUTPUT",
     "output": "WORKING PROTOTYPES",
     "projectsEyebrow": "ENGINEERING LOG",
-    "projectsTitle": "实践项目",
-    "filterAll": "全部",
-    "filterBrand": "产品硬件",
-    "filterDigital": "嵌入式",
-    "filterEditorial": "研发记录",
-    "projectLinkLabel": "点击查看 ↗",
+    "projectsTitle": "\u5b9e\u8df5\u9879\u76ee",
+    "filterAll": "\u5168\u90e8",
+    "filterBrand": "\u4ea7\u54c1\u786c\u4ef6",
+    "filterDigital": "\u5d4c\u5165\u5f0f",
+    "filterEditorial": "\u7814\u53d1\u8bb0\u5f55",
+    "projectLinkLabel": "\u70b9\u51fb\u67e5\u770b \u2197",
     "aboutEyebrow": "HOW I WORK",
     "aboutCode": "SYS / 04",
     "contactEyebrow": "START A PROJECT",
     "contactStatus": "AVAILABLE / 2026",
-    "contactTitle": "有个硬件想法？",
-    "contactCta": "一起把它做出来。",
-    "profileImage": "media/1785833033858-avatar.png",
-    "profileImageAlt": "KEHAN 的头像",
+    "contactTitle": "\u6709\u4e2a\u786c\u4ef6\u60f3\u6cd5\uff1f",
+    "contactCta": "\u4e00\u8d77\u628a\u5b83\u505a\u51fa\u6765\u3002",
+    "profileImage": "media/1785833033858-avatar-optimized.webp",
+    "profileImageAlt": "KEHAN \u7684\u5934\u50cf",
     "fontNav": "13",
     "fontHero": "100",
     "fontIntro": "16",
@@ -43,52 +43,52 @@
     "fontCard": "20",
     "capabilities": [
       {
-        "title": "电路与硬件",
+        "title": "\u7535\u8def\u4e0e\u786c\u4ef6",
         "code": "CIRCUIT"
       },
       {
-        "title": "快速原型",
+        "title": "\u5feb\u901f\u539f\u578b",
         "code": "PROTOTYPE"
       },
       {
-        "title": "测试调试",
+        "title": "\u6d4b\u8bd5\u8c03\u8bd5",
         "code": "DEBUG"
       },
       {
-        "title": "持续迭代",
+        "title": "\u6301\u7eed\u8fed\u4ee3",
         "code": "ITERATE"
       }
     ],
     "processSteps": [
       {
-        "title": "定义问题",
+        "title": "\u5b9a\u4e49\u95ee\u9898",
         "code": "DEFINE"
       },
       {
-        "title": "搭建原型",
+        "title": "\u642d\u5efa\u539f\u578b",
         "code": "BUILD"
       },
       {
-        "title": "测试验证",
+        "title": "\u6d4b\u8bd5\u9a8c\u8bc1",
         "code": "TEST"
       },
       {
-        "title": "迭代交付",
+        "title": "\u8fed\u4ee3\u4ea4\u4ed8",
         "code": "ITERATE"
       }
     ],
-    "title": "KEHAN — 硬件工程师作品集",
-    "description": "硬件工程师 KEHAN 的个人项目作品集",
-    "name": "联系电话：13628012856",
+    "title": "KEHAN \u2014 \u786c\u4ef6\u5de5\u7a0b\u5e08\u4f5c\u54c1\u96c6",
+    "description": "\u786c\u4ef6\u5de5\u7a0b\u5e08 KEHAN \u7684\u4e2a\u4eba\u9879\u76ee\u4f5c\u54c1\u96c6",
+    "name": "\u8054\u7cfb\u7535\u8bdd\uff1a13628012856",
     "eyebrow": "HARDWARE ENGINEER / 2026",
-    "heroTitle": "你说出想法，<em>我来实现</em>",
-    "intro": "你好，我是 KEHAN，一名专注于硬件产品与原型验证的硬件工程师。",
-    "aboutTitle": "从想法到可运行原型，<br><em>每一步都清晰可验证。</em>",
-    "aboutCopy": "我关注需求、实现和验证之间的完整闭环，用快速迭代把复杂问题变成可靠、清晰的硬件方案。",
+    "heroTitle": "\u4f60\u8bf4\u51fa\u60f3\u6cd5\uff0c<em>\u6211\u6765\u5b9e\u73b0</em>",
+    "intro": "\u4f60\u597d\uff0c\u6211\u662f KEHAN\uff0c\u4e00\u540d\u4e13\u6ce8\u4e8e\u786c\u4ef6\u4ea7\u54c1\u4e0e\u539f\u578b\u9a8c\u8bc1\u7684\u786c\u4ef6\u5de5\u7a0b\u5e08\u3002",
+    "aboutTitle": "\u4ece\u60f3\u6cd5\u5230\u53ef\u8fd0\u884c\u539f\u578b\uff0c<br><em>\u6bcf\u4e00\u6b65\u90fd\u6e05\u6670\u53ef\u9a8c\u8bc1\u3002</em>",
+    "aboutCopy": "\u6211\u5173\u6ce8\u9700\u6c42\u3001\u5b9e\u73b0\u548c\u9a8c\u8bc1\u4e4b\u95f4\u7684\u5b8c\u6574\u95ed\u73af\uff0c\u7528\u5feb\u901f\u8fed\u4ee3\u628a\u590d\u6742\u95ee\u9898\u53d8\u6210\u53ef\u9760\u3001\u6e05\u6670\u7684\u786c\u4ef6\u65b9\u6848\u3002",
     "email": "2962672438@qq.com",
     "socials": [
       {
-        "label": "小红书",
+        "label": "\u5c0f\u7ea2\u4e66",
         "url": "#"
       },
       {
@@ -104,20 +104,20 @@
   "projects": [
     {
       "id": "hillside",
-      "title": "墨水屏",
-      "description": "Ebook 是一款基于 ESP32-S3 的 2.7 寸墨水屏阅读器，支持触摸、拨码与 TF 卡扩展，内置阅读、音乐、天气、时钟等应用，采用自研 UI 框架，适合开源学习与产品二次开发。",
+      "title": "\u58a8\u6c34\u5c4f",
+      "description": "Ebook \u662f\u4e00\u6b3e\u57fa\u4e8e ESP32-S3 \u7684 2.7 \u5bf8\u58a8\u6c34\u5c4f\u9605\u8bfb\u5668\uff0c\u652f\u6301\u89e6\u6478\u3001\u62e8\u7801\u4e0e TF \u5361\u6269\u5c55\uff0c\u5185\u7f6e\u9605\u8bfb\u3001\u97f3\u4e50\u3001\u5929\u6c14\u3001\u65f6\u949f\u7b49\u5e94\u7528\uff0c\u91c7\u7528\u81ea\u7814 UI \u6846\u67b6\uff0c\u9002\u5408\u5f00\u6e90\u5b66\u4e60\u4e0e\u4ea7\u54c1\u4e8c\u6b21\u5f00\u53d1\u3002",
       "category": "brand",
       "label": "BRAND IDENTITY",
       "year": "2026",
       "mediaType": "image",
-      "media": "media/1785746369939--_20260709095504_292_142.jpg",
-      "alt": "墨水屏幕",
+      "media": "media/1785746369939--_20260709095504_292_142-optimized.webp",
+      "alt": "\u58a8\u6c34\u5c4f\u5e55",
       "link": "https://oshwhub.com/irex142359/project_xlbhvypw",
       "layout": "large",
       "published": true,
       "hoverImages": [
-        "media/1785829221930-_20260709095504_292_142.jpg",
-        "media/1785829226754-_20260709095520_293_142.jpg"
+        "media/1785829221930-_20260709095504_292_142-optimized.webp",
+        "media/1785829226754-_20260709095520_293_142-optimized.webp"
       ],
       "hoverImageSizes": [
         {
@@ -132,14 +132,14 @@
     },
     {
       "id": "onda",
-      "title": "合体墨水屏",
-      "description": "Ebook 是一款基于 ESP32-S3 的 2.7 寸墨水屏阅读器，支持触摸、拨码与 TF 卡扩展，内置阅读、音乐、天气、时钟等应用，采用自研 UI 框架，适合开源学习与产品二次开发。",
+      "title": "\u5408\u4f53\u58a8\u6c34\u5c4f",
+      "description": "Ebook \u662f\u4e00\u6b3e\u57fa\u4e8e ESP32-S3 \u7684 2.7 \u5bf8\u58a8\u6c34\u5c4f\u9605\u8bfb\u5668\uff0c\u652f\u6301\u89e6\u6478\u3001\u62e8\u7801\u4e0e TF \u5361\u6269\u5c55\uff0c\u5185\u7f6e\u9605\u8bfb\u3001\u97f3\u4e50\u3001\u5929\u6c14\u3001\u65f6\u949f\u7b49\u5e94\u7528\uff0c\u91c7\u7528\u81ea\u7814 UI \u6846\u67b6\uff0c\u9002\u5408\u5f00\u6e90\u5b66\u4e60\u4e0e\u4ea7\u54c1\u4e8c\u6b21\u5f00\u53d1\u3002",
       "category": "digital",
       "label": "DIGITAL",
       "year": "2026",
       "mediaType": "image",
-      "media": "media/1785746389306-296_142_-.jpg",
-      "alt": "手机应用界面设计",
+      "media": "media/1785746389306-296_142_--optimized.webp",
+      "alt": "\u624b\u673a\u5e94\u7528\u754c\u9762\u8bbe\u8ba1",
       "link": "https://www.bilibili.com/video/BV1ug326GEuj/?spm_id_from=333.1365.list.card_archive.click&vd_source=8606a362b53a31471ea01f09065b7a5b",
       "layout": "normal",
       "published": true,
@@ -152,14 +152,14 @@
     },
     {
       "id": "magazine",
-      "title": "未命名杂志 · 第四期",
-      "description": "Ebook 是一款基于 ESP32-S3 的 2.7 寸墨水屏阅读器，支持触摸、拨码与 TF 卡扩展，内置阅读、音乐、天气、时钟等应用，采用自研 UI 框架，适合开源学习与产品二次开发。",
+      "title": "\u672a\u547d\u540d\u6742\u5fd7 \u00b7 \u7b2c\u56db\u671f",
+      "description": "Ebook \u662f\u4e00\u6b3e\u57fa\u4e8e ESP32-S3 \u7684 2.7 \u5bf8\u58a8\u6c34\u5c4f\u9605\u8bfb\u5668\uff0c\u652f\u6301\u89e6\u6478\u3001\u62e8\u7801\u4e0e TF \u5361\u6269\u5c55\uff0c\u5185\u7f6e\u9605\u8bfb\u3001\u97f3\u4e50\u3001\u5929\u6c14\u3001\u65f6\u949f\u7b49\u5e94\u7528\uff0c\u91c7\u7528\u81ea\u7814 UI \u6846\u67b6\uff0c\u9002\u5408\u5f00\u6e90\u5b66\u4e60\u4e0e\u4ea7\u54c1\u4e8c\u6b21\u5f00\u53d1\u3002",
       "category": "editorial",
       "label": "EDITORIAL",
       "year": "2025",
       "mediaType": "image",
-      "media": "media/1785750154185-17b81cc2a8dfc910c6cc65a4ec3fcadc.jpg",
-      "alt": "杂志与桌面",
+      "media": "media/1785750154185-17b81cc2a8dfc910c6cc65a4ec3fcadc-optimized.webp",
+      "alt": "\u6742\u5fd7\u4e0e\u684c\u9762",
       "link": "https://oshwhub.com/irex142359/project_xlbhvypw",
       "layout": "wide",
       "published": true,
@@ -172,14 +172,14 @@
     },
     {
       "id": "casa",
-      "title": "CASA · 建筑工作室",
-      "description": "Ebook 是一款基于 ESP32-S3 的 2.7 寸墨水屏阅读器，支持触摸、拨码与 TF 卡扩展，内置阅读、音乐、天气、时钟等应用，采用自研 UI 框架，适合开源学习与产品二次开发。",
+      "title": "CASA \u00b7 \u5efa\u7b51\u5de5\u4f5c\u5ba4",
+      "description": "Ebook \u662f\u4e00\u6b3e\u57fa\u4e8e ESP32-S3 \u7684 2.7 \u5bf8\u58a8\u6c34\u5c4f\u9605\u8bfb\u5668\uff0c\u652f\u6301\u89e6\u6478\u3001\u62e8\u7801\u4e0e TF \u5361\u6269\u5c55\uff0c\u5185\u7f6e\u9605\u8bfb\u3001\u97f3\u4e50\u3001\u5929\u6c14\u3001\u65f6\u949f\u7b49\u5e94\u7528\uff0c\u91c7\u7528\u81ea\u7814 UI \u6846\u67b6\uff0c\u9002\u5408\u5f00\u6e90\u5b66\u4e60\u4e0e\u4ea7\u54c1\u4e8c\u6b21\u5f00\u53d1\u3002",
       "category": "brand",
       "label": "BRAND IDENTITY",
       "year": "2025",
       "mediaType": "image",
-      "media": "media/1785831224719-bf04a547769c703ed9459e42fd4002e2.jpg",
-      "alt": "建筑表面与阳光",
+      "media": "media/1785831224719-bf04a547769c703ed9459e42fd4002e2-optimized.webp",
+      "alt": "\u5efa\u7b51\u8868\u9762\u4e0e\u9633\u5149",
       "link": "",
       "layout": "normal",
       "published": true,
@@ -192,14 +192,14 @@
     },
     {
       "id": "play",
-      "title": "PLAY / 交互式档案",
-      "description": "Ebook 是一款基于 ESP32-S3 的 2.7 寸墨水屏阅读器，支持触摸、拨码与 TF 卡扩展，内置阅读、音乐、天气、时钟等应用，采用自研 UI 框架，适合开源学习与产品二次开发。",
+      "title": "PLAY / \u4ea4\u4e92\u5f0f\u6863\u6848",
+      "description": "Ebook \u662f\u4e00\u6b3e\u57fa\u4e8e ESP32-S3 \u7684 2.7 \u5bf8\u58a8\u6c34\u5c4f\u9605\u8bfb\u5668\uff0c\u652f\u6301\u89e6\u6478\u3001\u62e8\u7801\u4e0e TF \u5361\u6269\u5c55\uff0c\u5185\u7f6e\u9605\u8bfb\u3001\u97f3\u4e50\u3001\u5929\u6c14\u3001\u65f6\u949f\u7b49\u5e94\u7528\uff0c\u91c7\u7528\u81ea\u7814 UI \u6846\u67b6\uff0c\u9002\u5408\u5f00\u6e90\u5b66\u4e60\u4e0e\u4ea7\u54c1\u4e8c\u6b21\u5f00\u53d1\u3002",
       "category": "digital",
       "label": "DIGITAL EXPERIENCE",
       "year": "2025",
       "mediaType": "image",
-      "media": "media/1785754482207-6a4fbe8ca066d2fd3bfa3282cc36193f.jpg",
-      "alt": "复古电子游戏机",
+      "media": "media/1785754482207-6a4fbe8ca066d2fd3bfa3282cc36193f-optimized.webp",
+      "alt": "\u590d\u53e4\u7535\u5b50\u6e38\u620f\u673a",
       "link": "",
       "layout": "wide",
       "published": true,
@@ -212,19 +212,19 @@
     },
     {
       "id": "night",
-      "title": "自绕线无刷电机",
-      "description": "手工制作无刷电机，自行绕组，36槽40极电机",
+      "title": "\u81ea\u7ed5\u7ebf\u65e0\u5237\u7535\u673a",
+      "description": "\u624b\u5de5\u5236\u4f5c\u65e0\u5237\u7535\u673a\uff0c\u81ea\u884c\u7ed5\u7ec4\uff0c36\u69fd40\u6781\u7535\u673a",
       "category": "brand",
       "label": "ART DIRECTION",
       "year": "2026",
       "mediaType": "image",
-      "media": "media/1785832591932-b45fbef5a45b3a27e4137be3f084f7d1.jpg",
-      "alt": "演出灯光",
+      "media": "media/1785832591932-b45fbef5a45b3a27e4137be3f084f7d1-optimized.webp",
+      "alt": "\u6f14\u51fa\u706f\u5149",
       "link": "https://www.bilibili.com/video/BV1sBuc6BESZ/?spm_id_from=333.1387.homepage.video_card.click&vd_source=8606a362b53a31471ea01f09065b7a5b",
       "layout": "normal",
       "published": true,
       "hoverImages": [
-        "media/1785832684455-83982399578668ea2ececedf156fcdd7.jpg"
+        "media/1785832684455-83982399578668ea2ececedf156fcdd7-optimized.webp"
       ],
       "hoverImageSizes": [
         {
@@ -235,15 +235,15 @@
     },
     {
       "id": "project-1785832007235",
-      "title": "新作品",
+      "title": "\u65b0\u4f5c\u54c1",
       "description": "",
       "category": "brand",
       "label": "PROJECT",
       "year": "2026",
       "mediaType": "image",
-      "media": "media/1785832035911-7ea917f34aad4ce6ecf28e808f95e234.jpg",
+      "media": "media/1785832035911-7ea917f34aad4ce6ecf28e808f95e234-optimized.webp",
       "hoverImages": [
-        "media/1785832116400-8d4b5fb49c66f7503f2afcf46e314db0.jpg"
+        "media/1785832116400-8d4b5fb49c66f7503f2afcf46e314db0-optimized.webp"
       ],
       "hoverImageSizes": [
         {
