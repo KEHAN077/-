@@ -6,6 +6,29 @@ const statusEl = $('#status');
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
 const utf8ToBase64 = (text) => { const bytes = new TextEncoder().encode(text); let binary = ''; bytes.forEach((byte) => { binary += String.fromCharCode(byte); }); return btoa(binary); };
 const base64ToUtf8 = (base64) => { const binary = atob(base64.replace(/\n/g, '')); const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0)); return new TextDecoder().decode(bytes); };
+const fileToBase64 = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(String(reader.result).split(',')[1]);
+  reader.onerror = reject;
+  reader.readAsDataURL(file);
+});
+const cleanFileStem = (name, fallback = 'upload') => name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || fallback;
+
+async function optimizeImage(file, { maxSide = 1800, quality = 0.78 } = {}) {
+  if (!/^image\/(jpeg|png|webp)$/i.test(file.type)) return file;
+  const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  const context = canvas.getContext('2d', { alpha: true });
+  context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close?.();
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', quality));
+  if (!blob) throw new Error('图片压缩失败，请换一张图片重试。');
+  if (file.type === 'image/webp' && blob.size >= file.size) return file;
+  return new File([blob], `${cleanFileStem(file.name)}.webp`, { type: 'image/webp', lastModified: Date.now() });
+}
 const apiPath = (path) => `https://api.github.com/repos/${encodeURIComponent(state.owner)}/${encodeURIComponent(state.repo)}/contents/${path}`;
 const DEFAULT_SITE = {
   brandPrimary: 'KH', brandSecondary: '//HW', navWork: '项目', navAbout: '方法', navContact: '联系', navStatus: 'HARDWARE ENGINEER',
@@ -160,12 +183,16 @@ function renderProjectEditor() {
 async function uploadMedia(file) {
   if (!file || !selectedProject()) return;
   if (file.size > 45 * 1024 * 1024) throw new Error('文件超过 45 MB，请压缩后再上传。');
-  const button = $('#upload-media'); button.disabled = true; button.textContent = '正在上传…'; setStatus('正在上传媒体，请勿关闭页面');
-  const extension = (file.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-  const cleanStem = file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'upload';
+  const button = $('#upload-media'); button.disabled = true; button.textContent = '正在处理…';
+  const isVideo = file.type.startsWith('video/');
+  setStatus(isVideo ? '正在上传视频，请勿关闭页面' : '正在自动压缩图片…');
+  const uploadFile = isVideo ? file : await optimizeImage(file, { maxSide: 1800, quality: 0.78 });
+  const extension = (uploadFile.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanStem = cleanFileStem(uploadFile.name);
   const cleanName = `${cleanStem}.${extension || (file.type.startsWith('video/') ? 'mp4' : 'jpg')}`;
   const path = `media/${Date.now()}-${cleanName}`;
-  const content = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
+  setStatus(`正在上传${isVideo ? '视频' : '压缩后的图片'}，请勿关闭页面`);
+  const content = await fileToBase64(uploadFile);
   const uploaded = await github(apiPath(path), { method: 'PUT', body: JSON.stringify({ message: `Upload ${cleanName}`, content, branch: state.branch }) });
   if (!uploaded.content?.path) throw new Error('GitHub 没有返回上传后的文件路径，请重试。');
   const project = selectedProject(); project.media = uploaded.content.path; project.mediaType = file.type.startsWith('video/') ? 'video' : 'image'; markDirty(); renderList(); renderProjectEditor(); setStatus('媒体上传成功，请点击“保存并发布”完成作品更新', 'success');
@@ -180,10 +207,12 @@ async function uploadHoverMedia(files) {
   const button = $('#upload-hover-media'); button.disabled = true; button.textContent = '正在上传…'; setStatus('正在上传悬浮补充图片，请勿关闭页面');
   const uploadedPaths = [];
   for (const file of selectedFiles) {
-    const extension = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
-    const cleanStem = file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'preview';
+    setStatus('正在自动压缩悬浮补充图片…');
+    const uploadFile = await optimizeImage(file, { maxSide: 1600, quality: 0.76 });
+    const extension = (uploadFile.name.split('.').pop() || 'webp').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const cleanStem = cleanFileStem(uploadFile.name, 'preview');
     const path = `media/${Date.now()}-${cleanStem}.${extension || 'jpg'}`;
-    const content = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
+    const content = await fileToBase64(uploadFile);
     const uploaded = await github(apiPath(path), { method: 'PUT', body: JSON.stringify({ message: `Upload hover preview ${cleanStem}`, content, branch: state.branch }) });
     if (!uploaded.content?.path) throw new Error('GitHub 没有返回补充图片路径，请重试。');
     uploadedPaths.push(uploaded.content.path);
@@ -196,10 +225,12 @@ async function uploadAvatar(file) {
   if (!file) return;
   if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) throw new Error('请选择 JPG、PNG、WebP 或 GIF 图片。');
   if (file.size > 15 * 1024 * 1024) throw new Error('头像图片不能超过 15 MB。');
-  const button = $('#upload-avatar'); button.disabled = true; button.textContent = '正在上传…'; setStatus('正在上传头像，请勿关闭页面');
-  const extension = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const button = $('#upload-avatar'); button.disabled = true; button.textContent = '正在处理…'; setStatus('正在自动压缩头像…');
+  const uploadFile = await optimizeImage(file, { maxSide: 1200, quality: 0.8 });
+  const extension = (uploadFile.name.split('.').pop() || 'webp').toLowerCase().replace(/[^a-z0-9]/g, '');
   const path = `media/${Date.now()}-avatar.${extension || 'jpg'}`;
-  const content = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
+  setStatus('正在上传压缩后的头像，请勿关闭页面');
+  const content = await fileToBase64(uploadFile);
   const uploaded = await github(apiPath(path), { method: 'PUT', body: JSON.stringify({ message: 'Upload profile image', content, branch: state.branch }) });
   state.content.site.profileImage = uploaded.content.path;
   $('[data-site="profileImage"]').value = uploaded.content.path;
